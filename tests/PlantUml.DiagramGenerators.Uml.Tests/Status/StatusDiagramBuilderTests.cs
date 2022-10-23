@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
+using PlantUml.DiagramGenerators.Uml.Status;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests;
+namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
 
 public class StatusDiagramBuilderTests
 {
@@ -9,9 +10,9 @@ public class StatusDiagramBuilderTests
     {
         var builder = new StatusDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-            {
-                Length = 3
-            })
+        {
+            Length = 3
+        })
             .AddStatusTransition("New", "InProgress")
             .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
             {
@@ -39,9 +40,9 @@ Completed ------> [*]
     {
         var builder = new StatusDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-            {
-                Length = 3
-            })
+        {
+            Length = 3
+        })
             .AddStatusTransition("New", "InProgress")
             .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
             {
@@ -80,9 +81,9 @@ Completed ------> [*]
     {
         var builder = new StatusDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-            {
-                Length = 3
-            })
+        {
+            Length = 3
+        })
             .AddStatusTransition("New", "InProgress")
             .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
             {
@@ -231,10 +232,10 @@ Z --> Y
             .AddSubStatus("State3", b =>
             {
                 b.AddStatus(new StatusOptions("Accumulate Enough Data\\nLong State Name")
-                    {
-                        Alias = "long1",
-                        Description = "Just a test",
-                    })
+                {
+                    Alias = "long1",
+                    Description = "Just a test",
+                })
                     .AddStartTransition("long1")
                     .AddStatusTransition("long1", "long1", "New Data")
                     .AddStatusTransition("long1", "ProcessData", "Enough Data");

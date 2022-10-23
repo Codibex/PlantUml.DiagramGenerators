@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Status;
 
 /// <summary>
 /// Options to configure complex status
@@ -43,7 +43,7 @@ public class StatusOptions
         }
 
         return StatusName.Split(' ').Length == 1 && Type == StatusType.Unspecified
-            ? StatusName 
+            ? StatusName
             : $"\"{StatusName}\"";
     }
 }

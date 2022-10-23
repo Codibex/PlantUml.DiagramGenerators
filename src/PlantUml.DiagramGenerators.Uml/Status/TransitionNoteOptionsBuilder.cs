@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Status;
 
 public class TransitionNoteOptionsBuilder
 {
@@ -9,6 +9,6 @@ public class TransitionNoteOptionsBuilder
         _noteOptions = noteOptions;
     }
 
-    public string Build() 
+    public string Build()
         => $"note on link{Environment.NewLine}{_noteOptions.Note}{Environment.NewLine}end note";
 }

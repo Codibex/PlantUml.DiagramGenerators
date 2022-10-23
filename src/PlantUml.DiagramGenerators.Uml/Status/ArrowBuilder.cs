@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Status;
 
 internal class ArrowBuilder
 {
@@ -31,7 +31,7 @@ internal class ArrowBuilder
     {
         bool colorSet = string.IsNullOrWhiteSpace(_options.Color) == false;
         bool styleSet = string.IsNullOrWhiteSpace(_options.Style) == false;
-        
+
         if (colorSet == false && styleSet == false)
         {
             return string.Empty;

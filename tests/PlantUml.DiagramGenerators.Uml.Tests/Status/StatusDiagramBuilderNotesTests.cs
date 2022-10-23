@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
+using PlantUml.DiagramGenerators.Uml.Status;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests;
+namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
 
 public class StatusDiagramBuilderNotesTests
 {
@@ -10,9 +11,9 @@ public class StatusDiagramBuilderNotesTests
         string uml = new StatusDiagramBuilder()
             .AddStartTransition("Active")
             .AddStatusTransition(new StatusOptions("Active")
-                {
-                    NoteOptions = new StatusNoteOptions("this is a short\\nnote", NotePosition.Left)
-                },
+            {
+                NoteOptions = new StatusNoteOptions("this is a short\\nnote", NotePosition.Left)
+            },
                 new StatusOptions("Inactive")
                 {
                     NoteOptions = new StatusNoteOptions(@"A note can also
@@ -58,7 +59,7 @@ note ""This is a floating note"" as N1
     {
         string uml = new StatusDiagramBuilder()
             .AddStartTransition("State1")
-            .AddStatusTransition("State1", "State2",  noteOptions: new TransitionNoteOptions("  this is a state-transition note"))
+            .AddStatusTransition("State1", "State2", noteOptions: new TransitionNoteOptions("  this is a state-transition note"))
             .Build();
 
         const string expected = @"@startuml
@@ -87,9 +88,9 @@ end note
             }, b =>
             {
                 b.AddStatus(new StatusOptions("Idle mode")
-                    {
+                {
                     Alias = "Idle"
-                    })
+                })
                     .AddStatus(new StatusOptions("Configuring mode")
                     {
                         Alias = "Configuring"

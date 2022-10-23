@@ -1,11 +1,11 @@
 ﻿using System.Text;
 
-namespace PlantUml.DiagramGenerators.Uml;
+namespace PlantUml.DiagramGenerators.Uml.Status;
 
-public class StatusDiagramBuilder : UmlBuilder
+public class StatusDiagramBuilder
 {
     private readonly StatusTransitionBuilder _builder = new(0);
-    
+
     public StatusDiagramBuilder AddStartTransition(string statusName, string? description = null, ArrowOptions? arrowOptions = null)
     {
         _builder.AddStartTransition(statusName, description, arrowOptions);
@@ -67,7 +67,7 @@ public class StatusDiagramBuilder : UmlBuilder
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(START_TAG);
-        
+
         if (currentOptions.HideEmptyDescriptionTag)
         {
             stringBuilder.AppendLine(HIDE_EMPTY_DESCRIPTION_TAG);

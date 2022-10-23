@@ -1,14 +1,14 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Status;
 
 internal class StatusBuilder
 {
     private readonly StatusOptions _options;
-    
+
     public StatusBuilder(StatusOptions options)
     {
         _options = options;
     }
-    
+
     public string Build()
     {
         CheckOptions();
@@ -21,7 +21,7 @@ internal class StatusBuilder
         statusString = AppendColor(statusString);
         statusString = AppendType(statusString);
         statusString = AppendDescription(statusString);
-        
+
         return statusString;
     }
 
@@ -57,9 +57,9 @@ internal class StatusBuilder
         return $"{statusString} as {alias}";
     }
 
-    private string AppendDescription(string statusString) 
-        => string.IsNullOrWhiteSpace(_options.Description) 
-            ? statusString 
+    private string AppendDescription(string statusString)
+        => string.IsNullOrWhiteSpace(_options.Description)
+            ? statusString
             : $"{statusString} : {_options.Description}";
 
     private string AppendType(string statusString)

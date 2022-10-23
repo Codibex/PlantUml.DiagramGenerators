@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
+using PlantUml.DiagramGenerators.Uml.Status;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests;
+namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
 public class StatusDiagramBuilderStyleTests
 {
     [Fact]
@@ -98,23 +99,23 @@ Y1 -[#blue,bold]-> Y2
             }, b =>
             {
                 b.AddSubStatus(new StatusOptions("HardwareSetup")
+                {
+                    Color = "#lightblue"
+                }, sb =>
+                {
+                    sb.AddStatus(new StatusOptions("Site")
                     {
-                        Color = "#lightblue"
-                    }, sb =>
-                    {
-                        sb.AddStatus(new StatusOptions("Site")
-                            {
-                                Color = "#brown"
-                            })
-                            .AddStatusTransition("Site", "Controller", arrowOptions: new ArrowOptions
-                            {
-                                Style = "hidden"
-                            })
-                            .AddStatusTransition("Controller", "Devices", arrowOptions: new ArrowOptions
-                            {
-                                Style = "hidden"
-                            });
+                        Color = "#brown"
                     })
+                        .AddStatusTransition("Site", "Controller", arrowOptions: new ArrowOptions
+                        {
+                            Style = "hidden"
+                        })
+                        .AddStatusTransition("Controller", "Devices", arrowOptions: new ArrowOptions
+                        {
+                            Style = "hidden"
+                        });
+                })
                     .AddSubStatus(new StatusOptions("PresentationSetup"), sb =>
                     {
                         sb.AddStatusTransition("Groups", "PlansAndGraphics", arrowOptions: new ArrowOptions

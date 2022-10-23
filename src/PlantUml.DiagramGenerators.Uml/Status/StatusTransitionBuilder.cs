@@ -1,15 +1,11 @@
 ﻿using System.Text;
 
-namespace PlantUml.DiagramGenerators.Uml;
+namespace PlantUml.DiagramGenerators.Uml.Status;
 
 public class StatusTransitionBuilder : UmlBuilder
 {
-    private readonly int _nestingDepth;
-    private readonly SortedList<int, string> _list = new();
-
-    public StatusTransitionBuilder(int nestingDepth)
+    public StatusTransitionBuilder(int nestingDepth) : base(nestingDepth)
     {
-        _nestingDepth = nestingDepth;
     }
 
     public StatusTransitionBuilder AddStartTransition(string statusName, string? transitionDescription = null, ArrowOptions? arrowOptions = null)
@@ -79,14 +75,14 @@ public class StatusTransitionBuilder : UmlBuilder
 
     public StatusTransitionBuilder AddSubStatus(StatusOptions statusOptions, Action<StatusTransitionBuilder> subStatusBuildAction)
     {
-        var builder = new StatusTransitionBuilder(_nestingDepth + 1);
+        var builder = new StatusTransitionBuilder(NestingDepth + 1);
         subStatusBuildAction.Invoke(builder);
 
         string statusString = new StatusBuilder(statusOptions)
             .Build();
 
         AddEntry($"{statusString} {{");
-        _list.Add(_list.Count, builder.Build());
+        Statements.Add(Statements.Count, builder.Build());
         AddEntry("}");
         return this;
     }
@@ -142,18 +138,13 @@ public class StatusTransitionBuilder : UmlBuilder
     internal string Build()
     {
         var stringBuilder = new StringBuilder();
-        foreach (string value in _list.Values)
+        foreach (string value in Statements.Values)
         {
             stringBuilder.AppendLine(value);
         }
 
         return stringBuilder.ToString().TrimEnd();
     }
-
-    private void AddEntry(string entry) => _list.Add(_list.Count, $"{GetTabs()}{entry}");
-
-    private string GetTabs() =>
-        $"{string.Join("", Enumerable.Range(0, _nestingDepth).Select(_ => "\t"))}";
 
     private static string GetStartTransition(StatusOptions statusOptions, string? description, ArrowOptions? arrowOptions = null)
     {
@@ -179,6 +170,6 @@ public class StatusTransitionBuilder : UmlBuilder
         return new ArrowBuilder(arrowOptions ?? new ArrowOptions()).Build();
     }
 
-    private static string AppendDescription(string transition, string? transitionDescription) 
+    private static string AppendDescription(string transition, string? transitionDescription)
         => string.IsNullOrWhiteSpace(transitionDescription) ? transition : $"{transition} : {transitionDescription}";
 }

@@ -1,5 +1,5 @@
 ﻿using PlantUml.DiagramGenerators.Core;
-using PlantUml.DiagramGenerators.Uml;
+using PlantUml.DiagramGenerators.Uml.Status;
 using PlantUml.Net;
 
 string CreatePngFromJson()
