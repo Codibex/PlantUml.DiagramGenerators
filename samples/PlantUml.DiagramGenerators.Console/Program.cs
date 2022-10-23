@@ -1,4 +1,5 @@
 ﻿using PlantUml.DiagramGenerators.Core;
+using PlantUml.DiagramGenerators.Uml.Sequence;
 using PlantUml.DiagramGenerators.Uml.Status;
 using PlantUml.Net;
 
@@ -111,6 +112,18 @@ string CreateUmlFork()
         .Build();
 }
 
+string CreateUmlSequenceWithColor()
+{
+    return new SequenceDiagramBuilder()
+        .AddParticipant(Participant.CreateActor("Bob").WithColor("#red"))
+        .AddParticipant(Participant.CreateParticipant("Alice"))
+        .AddParticipant(Participant.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
+        .AddSequence("Alice", "Bob", "Authentication Request")
+        .AddSequence("Bob", "Alice", "Authentication Response")
+        .AddSequence("Bob", "L", "Log transaction")
+        .Build();
+}
+
 async Task RenderFile(IPlantUmlRenderer renderer, string data, string file)
 {
     var bytes = await renderer.RenderAsync(data, OutputFormat.Png);
@@ -125,3 +138,5 @@ await RenderFile(renderer, CreateUmlCompositeState(), "uml_composite_state");
 await RenderFile(renderer, CreateUmlSubStateToSubState(), "uml_subState_to_subState");
 await RenderFile(renderer, CreateUmlLongName(), "uml_long_name");
 await RenderFile(renderer, CreateUmlFork(), "uml_fork");
+
+await RenderFile(renderer, CreateUmlSequenceWithColor(), "uml_sequence_with_color");

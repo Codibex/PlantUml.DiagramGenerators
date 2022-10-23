@@ -21,7 +21,6 @@ public class SequenceDiagramBuilderTests
             .Build();
 
         const string expected = @"@startuml
-hide empty description
 Alice -> Bob : Authentication Request
 Bob --> Alice : Authentication Response
 Alice -> Bob : Another authentication Request
@@ -35,14 +34,14 @@ Alice <-- Bob : Another authentication Response
     public void Build_Declaring_Participant()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant("participant", "Foo")
-            .AddActor("actor", "Foo1")
-            .AddBoundary("boundary", "Foo2")
-            .AddControl("control", "Foo3")
-            .AddEntity("entity", "Foo4")
-            .AddDatabase("database", "Foo5")
-            .AddCollections("collections", "Foo6")
-            .AddQueue("queue", "Foo7")
+            .AddParticipant("Participant", "Foo")
+            .AddActor("Actor", "Foo1")
+            .AddBoundary("Boundary", "Foo2")
+            .AddControl("Control", "Foo3")
+            .AddEntity("Entity", "Foo4")
+            .AddDatabase("Database", "Foo5")
+            .AddCollections("Collections", "Foo6")
+            .AddQueue("Queue", "Foo7")
             .AddSequence("Foo", "Foo1", "To actor")
             .AddSequence("Foo", "Foo2", "To boundary")
             .AddSequence("Foo", "Foo3", "To control")
@@ -53,7 +52,6 @@ Alice <-- Bob : Another authentication Response
             .Build();
 
         const string expected = @"@startuml
-hide empty description
 participant Participant as Foo
 actor Actor as Foo1
 boundary Boundary as Foo2
@@ -69,6 +67,30 @@ Foo -> Foo4 : To entity
 Foo -> Foo5 : To database
 Foo -> Foo6 : To collections
 Foo -> Foo7 : To queue
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Participant_WithColor()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddParticipant(Participant.CreateActor("Bob").WithColor("#red"))
+            .AddParticipant(Participant.CreateParticipant("Alice"))
+            .AddParticipant(Participant.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
+            .AddSequence("Alice", "Bob", "Authentication Request")
+            .AddSequence("Bob", "Alice", "Authentication Response")
+            .AddSequence("Bob", "L", "Log transaction")
+            .Build();
+
+        const string expected = @"@startuml
+actor Bob #red
+participant Alice
+participant ""I have a really\nlong name"" as L #99FF99
+Alice -> Bob : Authentication Request
+Bob -> Alice : Authentication Response
+Bob -> L : Log transaction
 @enduml";
 
         uml.Should().Be(expected);

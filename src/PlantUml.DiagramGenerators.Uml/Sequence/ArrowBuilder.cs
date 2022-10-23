@@ -14,7 +14,7 @@ internal class ArrowBuilder
         return _options.Style switch
         {
             ArrowStyle.Normal => _options.Direction == ArrowDirection.SourceToTarget ? "->" : "<-",
-            ArrowStyle.Dotted => _options.Direction == ArrowDirection.TargetToSource ? "-->" : "<--",
+            ArrowStyle.Dotted => _options.Direction == ArrowDirection.SourceToTarget ? "-->" : "<--",
             _ => throw new ArgumentOutOfRangeException()
         };
     }

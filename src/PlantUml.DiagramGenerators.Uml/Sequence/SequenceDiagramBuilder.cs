@@ -18,6 +18,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    public SequenceDiagramBuilder AddParticipant(Participant participant)
+    {
+        _builder.AddParticipant(participant);
+        return this;
+    }
+
     public SequenceDiagramBuilder AddActor(string participantName, string alias)
     {
         _builder.AddActor(participantName, alias);
@@ -67,12 +73,7 @@ public class SequenceDiagramBuilder
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(UmlConstants.START_TAG);
-
-        if (currentOptions.HideEmptyDescriptionTag)
-        {
-            stringBuilder.AppendLine(UmlConstants.HIDE_EMPTY_DESCRIPTION_TAG);
-        }
-
+        
         foreach (string additionalOption in currentOptions.AdditionalOptions)
         {
             stringBuilder.AppendLine(additionalOption);
@@ -82,19 +83,5 @@ public class SequenceDiagramBuilder
         stringBuilder.AppendLine(UmlConstants.END_TAG);
 
         return stringBuilder.ToString().TrimEnd();
-    }
-}
-
-public class SequenceDiagramOptions
-{
-    public static SequenceDiagramOptions Default => new(true, Array.Empty<string>());
-
-    public bool HideEmptyDescriptionTag { get; set; }
-    public string[] AdditionalOptions { get; set; }
-
-    private SequenceDiagramOptions(bool hideEmptyDescriptionTag, params string[] additionalOptions)
-    {
-        HideEmptyDescriptionTag = hideEmptyDescriptionTag;
-        AdditionalOptions = additionalOptions;
     }
 }

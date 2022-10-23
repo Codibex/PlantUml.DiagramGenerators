@@ -1,6 +1,6 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-internal enum ParticipantType
+public enum ParticipantType
 {
     Participant,
     Actor,
