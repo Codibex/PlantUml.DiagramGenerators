@@ -12,6 +12,54 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    public SequenceDiagramBuilder AddParticipant(string participantName, string alias)
+    {
+        _builder.AddParticipant(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddActor(string participantName, string alias)
+    {
+        _builder.AddActor(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddBoundary(string participantName, string alias)
+    {
+        _builder.AddBoundary(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddControl(string participantName, string alias)
+    {
+        _builder.AddControl(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddEntity(string participantName, string alias)
+    {
+        _builder.AddEntity(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddDatabase(string participantName, string alias)
+    {
+        _builder.AddDatabase(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddCollections(string participantName, string alias)
+    {
+        _builder.AddCollections(participantName, alias);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddQueue(string participantName, string alias)
+    {
+        _builder.AddQueue(participantName, alias);
+        return this;
+    }
+
     public string Build(Action<SequenceDiagramOptions>? options = null)
     {
         var currentOptions = SequenceDiagramOptions.Default;

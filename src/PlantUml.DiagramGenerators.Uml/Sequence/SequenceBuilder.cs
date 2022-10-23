@@ -29,13 +29,79 @@ public class SequenceBuilder : UmlBuilder
             currentArrowOptions.Direction = ArrowDirection.TargetToSource;
         }
 
-        AddEntry(GetStatusTransition(sourceParticipant, targetParticipant, sequenceDescription, currentArrowOptions));
+        AddEntry(GetSequence(sourceParticipant, targetParticipant, sequenceDescription, currentArrowOptions));
         return this;
     }
 
-    private static string GetStatusTransition(string sourceParticipant, string targetParticipant, string? transitionDescription, ArrowOptions arrowOptions)
+    public SequenceBuilder AddParticipant(string participantName, string alias)
     {
-        return AppendDescription($"{sourceParticipant} {GetArrow(arrowOptions)} {targetParticipant}", transitionDescription);
+        AddEntry(GetParticipant(ParticipantType.Participant, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddActor(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Actor, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddBoundary(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Boundary, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddControl(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Control, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddEntity(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Entity, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddDatabase(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Database, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddCollections(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Collections, participantName, alias));
+        return this;
+    }
+
+    public SequenceBuilder AddQueue(string participantName, string alias)
+    {
+        AddEntry(GetParticipant(ParticipantType.Queue, participantName, alias));
+        return this;
+    }
+
+    private static string GetSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription, ArrowOptions arrowOptions)
+    {
+        return AppendDescription($"{sourceParticipant} {GetArrow(arrowOptions)} {targetParticipant}", sequenceDescription);
+    }
+
+    private static string GetParticipant(ParticipantType participantType, string participantName, string alias)
+    {
+        var participantText = participantType switch
+        {
+            ParticipantType.Participant => "Participant",
+            ParticipantType.Actor => "Actor",
+            ParticipantType.Boundary => "Boundary",
+            ParticipantType.Control => "Control",
+            ParticipantType.Entity => "Entity",
+            ParticipantType.Database => "Database",
+            ParticipantType.Collections => "Collections",
+            ParticipantType.Queue => "Queue",
+            _ => throw new ArgumentOutOfRangeException(nameof(participantType), participantType, null)
+        };
+
+        return $"{participantName} {participantText} as {alias}";
     }
 
     private static string GetArrow(ArrowOptions arrowOptions)
@@ -43,8 +109,8 @@ public class SequenceBuilder : UmlBuilder
         return new ArrowBuilder(arrowOptions).Build();
     }
 
-    private static string AppendDescription(string transition, string? transitionDescription)
-        => string.IsNullOrWhiteSpace(transitionDescription) ? transition : $"{transition} : {transitionDescription}";
+    private static string AppendDescription(string transition, string? sequenceDescription)
+        => string.IsNullOrWhiteSpace(sequenceDescription) ? transition : $"{transition} : {sequenceDescription}";
 
     internal string Build()
     {
