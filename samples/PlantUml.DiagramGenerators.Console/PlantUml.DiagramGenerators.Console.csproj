@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PlantUml.Net" Version="1.4.80" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PlantUml.DiagramGenerators.Core\PlantUml.DiagramGenerators.Core.csproj" />
+    <ProjectReference Include="..\..\src\PlantUml.DiagramGenerators.Uml\PlantUml.DiagramGenerators.Uml.csproj" />
+  </ItemGroup>
+
+</Project>

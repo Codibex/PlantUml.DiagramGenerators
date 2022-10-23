@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{85D3A225-A2E5-468B-B9D5-F6C14E555384}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1341894B-B29F-4A77-B797-F629680C1EAE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D039BF2E-892C-4337-8EF3-29B4451A03C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{090A42BF-3585-4465-B814-5834EFAE25E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantUml.DiagramGenerators.Uml", "src\PlantUml.DiagramGenerators.Uml\PlantUml.DiagramGenerators.Uml.csproj", "{66A2A019-ABEA-462F-9A94-461867134F3F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantUml.DiagramGenerators.Core", "src\PlantUml.DiagramGenerators.Core\PlantUml.DiagramGenerators.Core.csproj", "{1D338115-82A6-4788-ABA8-094F9B19664A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantUml.DiagramGenerators.Uml.Tests", "tests\PlantUml.DiagramGenerators.Uml.Tests\PlantUml.DiagramGenerators.Uml.Tests.csproj", "{0164371A-D6B9-4924-85E8-BCA986B9208A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlantUml.DiagramGenerators.Console", "samples\PlantUml.DiagramGenerators.Console\PlantUml.DiagramGenerators.Console.csproj", "{9BC8A6BB-5822-4FD5-9A9E-9F600875881D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66A2A019-ABEA-462F-9A94-461867134F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A2A019-ABEA-462F-9A94-461867134F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A2A019-ABEA-462F-9A94-461867134F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A2A019-ABEA-462F-9A94-461867134F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D338115-82A6-4788-ABA8-094F9B19664A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D338115-82A6-4788-ABA8-094F9B19664A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D338115-82A6-4788-ABA8-094F9B19664A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D338115-82A6-4788-ABA8-094F9B19664A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0164371A-D6B9-4924-85E8-BCA986B9208A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0164371A-D6B9-4924-85E8-BCA986B9208A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0164371A-D6B9-4924-85E8-BCA986B9208A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0164371A-D6B9-4924-85E8-BCA986B9208A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC8A6BB-5822-4FD5-9A9E-9F600875881D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC8A6BB-5822-4FD5-9A9E-9F600875881D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC8A6BB-5822-4FD5-9A9E-9F600875881D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC8A6BB-5822-4FD5-9A9E-9F600875881D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{66A2A019-ABEA-462F-9A94-461867134F3F} = {85D3A225-A2E5-468B-B9D5-F6C14E555384}
+		{1D338115-82A6-4788-ABA8-094F9B19664A} = {85D3A225-A2E5-468B-B9D5-F6C14E555384}
+		{0164371A-D6B9-4924-85E8-BCA986B9208A} = {D039BF2E-892C-4337-8EF3-29B4451A03C0}
+		{9BC8A6BB-5822-4FD5-9A9E-9F600875881D} = {090A42BF-3585-4465-B814-5834EFAE25E5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {756F6968-B729-4037-8C98-09E8F3986A37}
+	EndGlobalSection
+EndGlobal
