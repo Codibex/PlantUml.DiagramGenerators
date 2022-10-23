@@ -66,11 +66,11 @@ public class StatusDiagramBuilder
         options?.Invoke(currentOptions);
 
         var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine(START_TAG);
+        stringBuilder.AppendLine(UmlConstants.START_TAG);
 
         if (currentOptions.HideEmptyDescriptionTag)
         {
-            stringBuilder.AppendLine(HIDE_EMPTY_DESCRIPTION_TAG);
+            stringBuilder.AppendLine(UmlConstants.HIDE_EMPTY_DESCRIPTION_TAG);
         }
 
         foreach (string additionalOption in currentOptions.AdditionalOptions)
@@ -79,7 +79,7 @@ public class StatusDiagramBuilder
         }
 
         stringBuilder.AppendLine(_builder.Build());
-        stringBuilder.AppendLine(END_TAG);
+        stringBuilder.AppendLine(UmlConstants.END_TAG);
 
         return stringBuilder.ToString().TrimEnd();
     }
