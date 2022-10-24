@@ -172,4 +172,50 @@ Alice -> Alice : This is a signal to self.\nIt also demonstrates\nmultiline \nte
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Text_Alignment()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Bob", "Alice", "Request")
+            .AddSequence("Alice", "Bob", "Response")
+            .Build(options =>
+            {
+                options.AdditionalOptions = new[]
+                {
+                    SkinParameter.SequenceMessageAlignment(SequenceMessageAlignment.Right).GetStatement(),
+                };
+            });
+
+        const string expected = @"@startuml
+skinparam sequenceMessageAlign right
+Bob -> Alice : Request
+Alice -> Bob : Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Response_Message_Below_Arrow()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Bob", "Alice", "hello")
+            .AddSequence("Alice", "Bob", "ok")
+            .Build(options =>
+            {
+                options.AdditionalOptions = new[]
+                {
+                    SkinParameter.ResponseMessageBelowArrow(true).GetStatement(),
+                };
+            });
+
+        const string expected = @"@startuml
+skinparam responseMessageBelowArrow true
+Bob -> Alice : hello
+Alice -> Bob : ok
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
