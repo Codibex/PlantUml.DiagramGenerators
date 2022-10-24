@@ -1,6 +1,4 @@
-﻿using PlantUml.DiagramGenerators.Uml.Status;
-
-namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class Participant
 {
@@ -8,6 +6,8 @@ public class Participant
     public string? Alias { get; }
     public ParticipantType Type { get; }
     public string? Color { get; private set; }
+
+    public int? Order { get; private set; }
 
     private Participant(string name, string? alias, ParticipantType type)
     {
@@ -46,6 +46,12 @@ public class Participant
         return this;
     }
 
+    public Participant WithOrder(int order)
+    {
+        Order = order;
+        return this;
+    }
+
     public string GetStatement()
     {
         string participantStatement = Type switch
@@ -61,10 +67,9 @@ public class Participant
             _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, null)
         };
 
-        string alias = string.IsNullOrWhiteSpace(Alias)
-            ? string.Empty
-            : $" as {Alias}";
-        participantStatement = $"{participantStatement} {GetName()}{alias}";
+        participantStatement = $"{participantStatement} {GetName()}";
+        participantStatement = AppendAlias(participantStatement);
+        participantStatement = AppendOrder(participantStatement);
         participantStatement = AppendColor(participantStatement);
 
         return participantStatement;
@@ -82,8 +87,24 @@ public class Participant
             : $"\"{Name}\"";
     }
 
-    private string AppendColor(string statusString) =>
+    private string AppendAlias(string participantStatement)
+    {
+        string alias = string.IsNullOrWhiteSpace(Alias)
+            ? participantStatement
+            : $"{participantStatement} as {Alias}";
+        return alias;
+    }
+
+    private string AppendOrder(string participantStatement)
+    {
+        string alias = Order is null
+            ? participantStatement
+            : $"{participantStatement} order {Order}";
+        return alias;
+    }
+
+    private string AppendColor(string participantStatement) =>
         string.IsNullOrWhiteSpace(Color)
-            ? statusString
-            : $"{statusString} {Color}";
+            ? participantStatement
+            : $"{participantStatement} {Color}";
 }

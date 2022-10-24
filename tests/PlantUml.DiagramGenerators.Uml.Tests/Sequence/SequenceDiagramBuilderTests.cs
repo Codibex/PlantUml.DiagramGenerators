@@ -95,4 +95,22 @@ Bob -> L : Log transaction
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Order()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddParticipant(Participant.CreateParticipant("Last").WithOrder(30))
+            .AddParticipant(Participant.CreateParticipant("Middle").WithOrder(20))
+            .AddParticipant(Participant.CreateParticipant("First").WithOrder(10))
+            .Build();
+
+        const string expected = @"@startuml
+participant Last order 30
+participant Middle order 20
+participant First order 10
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
