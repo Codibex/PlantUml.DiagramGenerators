@@ -12,10 +12,16 @@ public class SequenceBuilder : UmlBuilder
     public SequenceBuilder AddSequence(string sourceParticipant, string targetParticipant,
         string? sequenceDescription = null, ArrowOptions? arrowOptions = null)
     {
+        AddSequence(new Sequence(sourceParticipant, targetParticipant, sequenceDescription), arrowOptions);
+        return this;
+    }
+
+    public SequenceBuilder AddSequence(Sequence sequence, ArrowOptions? arrowOptions = null)
+    {
         var currentArrowOptions = arrowOptions ?? new ArrowOptions();
 
-        var sourceToTargetSequence = $"{sourceParticipant}_{targetParticipant}";
-        var targetToSourceSequence = $"{targetParticipant}_{sourceParticipant}";
+        var sourceToTargetSequence = $"{sequence.SourceParticipant}_{sequence.TargetParticipant}";
+        var targetToSourceSequence = $"{sequence.TargetParticipant}_{sequence.SourceParticipant}";
         if (_sequences.Contains(sourceToTargetSequence) == false &&
             _sequences.Contains(targetToSourceSequence) == false)
         {
@@ -29,8 +35,8 @@ public class SequenceBuilder : UmlBuilder
             if (sourceCountExists)
             {
                 _sequences.Add(sourceToTargetSequence);
-                currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0 
-                    ? ArrowDirection.TargetToSource 
+                currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
+                    ? ArrowDirection.TargetToSource
                     : ArrowDirection.SourceToTarget;
             }
             else
@@ -38,8 +44,11 @@ public class SequenceBuilder : UmlBuilder
                 _sequences.Add(targetToSourceSequence);
             }
         }
-
-        AddEntry(GetSequence(sourceParticipant, targetParticipant, sequenceDescription, currentArrowOptions));
+        if (sequence.AutoNumber is not null)
+        {
+            AddEntry(sequence.AutoNumber.GetStatement());
+        }
+        AddEntry(GetSequence(sequence.SourceParticipant, sequence.TargetParticipant, sequence.Description, currentArrowOptions));
         return this;
     }
 
@@ -116,17 +125,13 @@ public class SequenceBuilder : UmlBuilder
     {
         if (participant.Split(' ').Length > 1)
         {
-            var parts = participant.Split("as");
-
+            string[] parts = participant.Split("as");
             return $"\"{parts[0].TrimEnd()}\" as {parts[1].TrimStart()}";
         }
 
-        if (participant.All(char.IsLetterOrDigit))
-        {
-            return participant;
-        }
-
-        return $"\"{participant}\"";
+        return participant.All(char.IsLetterOrDigit) 
+            ? participant 
+            : $"\"{participant}\"";
     }
 
     private static string GetArrow(ArrowOptions arrowOptions)

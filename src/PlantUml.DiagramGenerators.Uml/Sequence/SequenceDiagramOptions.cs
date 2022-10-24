@@ -2,13 +2,19 @@
 
 public class SequenceDiagramOptions
 {
-    public static SequenceDiagramOptions Default => new(Array.Empty<string>());
+    private readonly List<string> _additionalOptions = new();
 
-    public bool AutoNumber { get; set; }
-    public string[] AdditionalOptions { get; set; }
+    public IReadOnlyList<string> AdditionalOptions => _additionalOptions;
 
-    private SequenceDiagramOptions(params string[] additionalOptions)
+    public static SequenceDiagramOptions Default => new();
+
+    private SequenceDiagramOptions()
     {
-        AdditionalOptions = additionalOptions;
+    }
+
+    public SequenceDiagramOptions AddOptions(params string[] options)
+    {
+        _additionalOptions.AddRange(options);
+        return this;
     }
 }

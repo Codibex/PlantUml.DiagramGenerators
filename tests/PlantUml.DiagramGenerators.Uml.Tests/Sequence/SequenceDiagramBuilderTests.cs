@@ -181,10 +181,7 @@ Alice -> Alice : This is a signal to self.\nIt also demonstrates\nmultiline \nte
             .AddSequence("Alice", "Bob", "Response")
             .Build(options =>
             {
-                options.AdditionalOptions = new[]
-                {
-                    SkinParameter.SequenceMessageAlignment(SequenceMessageAlignment.Right).GetStatement(),
-                };
+                options.AddOptions(SkinParameter.SequenceMessageAlignment(SequenceMessageAlignment.Right));
             });
 
         const string expected = @"@startuml
@@ -204,10 +201,7 @@ Alice -> Bob : Response
             .AddSequence("Alice", "Bob", "ok")
             .Build(options =>
             {
-                options.AdditionalOptions = new[]
-                {
-                    SkinParameter.ResponseMessageBelowArrow(true).GetStatement(),
-                };
+                options.AddOptions(SkinParameter.ResponseMessageBelowArrow(true));
             });
 
         const string expected = @"@startuml
@@ -246,17 +240,45 @@ Alice -[#0000FF]-> Bob : ok
     public void Build_AutoNumber()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddSequence("Bob", "Alice", "Authentication Request")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Authentication Request")
+                .WithAutoNumber())
             .AddSequence("Bob", "Alice", "Authentication Response")
-            .Build(options =>
-            {
-                options.AutoNumber = true;
-            });
+            .Build();
 
         const string expected = @"@startuml
 autonumber
 Bob -> Alice : Authentication Request
 Bob <- Alice : Authentication Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_AutoNumber_With_StartNumber()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Authentication Request")
+                .WithAutoNumber())
+            .AddSequence("Bob", "Alice", "Authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Another authentication Request")
+                .WithAutoNumber(15))
+            .AddSequence("Bob", "Alice", "Another authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
+                .WithAutoNumber(40, 10))
+            .AddSequence("Bob", "Alice", "Yet another authentication Response")
+            .Build();
+
+        const string expected = @"@startuml
+autonumber
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+autonumber 15
+Bob -> Alice : Another authentication Request
+Bob <- Alice : Another authentication Response
+autonumber 40 10
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
 @enduml";
 
         uml.Should().Be(expected);

@@ -12,6 +12,12 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    public SequenceDiagramBuilder AddSequence(Sequence sequence, ArrowOptions? arrowOptions = null)
+    {
+        _builder.AddSequence(sequence, arrowOptions);
+        return this;
+    }
+
     public SequenceDiagramBuilder AddParticipant(string participantName, string alias)
     {
         _builder.AddParticipant(participantName, alias);
@@ -73,12 +79,7 @@ public class SequenceDiagramBuilder
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(UmlConstants.START_TAG);
-
-        if (currentOptions.AutoNumber)
-        {
-            stringBuilder.AppendLine("autonumber");
-        }
-
+        
         foreach (string additionalOption in currentOptions.AdditionalOptions)
         {
             stringBuilder.AppendLine(additionalOption);
