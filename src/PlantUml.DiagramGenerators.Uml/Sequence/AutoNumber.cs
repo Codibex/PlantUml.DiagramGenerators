@@ -1,6 +1,6 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-public record AutoNumber(int? StartNumber, int? Increment, string? Style, AutoNumberBreak? AutoNumberBreak)
+public record AutoNumber(string? StartNumber, string? Increment, string? Style, AutoNumberBreak? AutoNumberBreak)
 {
     public string GetStatement()
     {
@@ -21,17 +21,19 @@ public record AutoNumber(int? StartNumber, int? Increment, string? Style, AutoNu
         };
 
     private string GetNumberStatement() =>
-        StartNumber is null
+        string.IsNullOrWhiteSpace(StartNumber)
             ? string.Empty
             : $" {StartNumber}";
 
     private string GetIncrementStatement() =>
-        Increment is null
+        string.IsNullOrWhiteSpace(Increment)
             ? string.Empty
-            : $" {Increment}";
+            : Increment.Any(char.IsLetter) 
+                ? $" inc {Increment}"
+                : $" {Increment}";
 
     private string GetStyleStatement() =>
-        Style is null
+        string.IsNullOrWhiteSpace(Style)
             ? string.Empty
             : $" \"{Style}\"";
 };

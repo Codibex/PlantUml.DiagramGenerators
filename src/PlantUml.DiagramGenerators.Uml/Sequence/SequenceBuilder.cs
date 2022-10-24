@@ -47,11 +47,6 @@ public class SequenceBuilder : UmlBuilder
                 }
             }
         }
-
-        if (sequence.AutoNumber is not null)
-        {
-            AddEntry(sequence.AutoNumber.GetStatement());
-        }
         AddEntry(GetSequence(sequence.SourceParticipant, sequence.TargetParticipant, sequence.Description, currentArrowOptions));
         return this;
     }
@@ -116,6 +111,20 @@ public class SequenceBuilder : UmlBuilder
         var participant = Participant.CreateQueue(participantName, alias);
         AddEntry(participant.GetStatement());
         return this;
+    }
+
+    public SequenceBuilder AddAutoNumber(string? startNumber, string? increment, string? style, AutoNumberBreak? @break)
+    {
+        var autoNumber = new AutoNumber(startNumber, increment, style, @break);
+        AddEntry(autoNumber.GetStatement());
+        return this;
+    }
+
+    public void AddNote(string note, NotePosition position)
+    {
+        AddEntry($"note {position.ToString().ToLower()}");
+        AddEntry(note);
+        AddEntry("end note");
     }
 
     private static string GetSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription, ArrowOptions arrowOptions)

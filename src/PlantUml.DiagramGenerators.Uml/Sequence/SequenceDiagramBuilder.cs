@@ -72,6 +72,19 @@ public class SequenceDiagramBuilder
         return this;
     }
 
+    public SequenceDiagramBuilder AddAutoNumber(string? startNumber = null, string? increment = null,
+        string? style = null, AutoNumberBreak? @break = null)
+    {
+        _builder.AddAutoNumber(startNumber, increment, style, @break);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddNote(string note, NotePosition position)
+    {
+        _builder.AddNote(note, position);
+        return this;
+    }
+
     public string Build(Action<SequenceDiagramOptions>? options = null)
     {
         var currentOptions = SequenceDiagramOptions.Default;
