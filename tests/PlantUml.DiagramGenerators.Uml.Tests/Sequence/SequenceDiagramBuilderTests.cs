@@ -262,10 +262,10 @@ Bob <- Alice : Authentication Response
                 .WithAutoNumber())
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Another authentication Request")
-                .WithAutoNumber(15))
+                .WithAutoNumber(startNumber: 15))
             .AddSequence("Bob", "Alice", "Another authentication Response")
             .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
-                .WithAutoNumber(40, 10))
+                .WithAutoNumber(startNumber: 40, increment: 10))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .Build();
 
@@ -292,10 +292,10 @@ Bob <- Alice : Yet another authentication Response
                 .WithAutoNumber(style: "<b>[000]"))
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Another authentication Request")
-                .WithAutoNumber(15, style: "<b>(<u>##</u>)"))
+                .WithAutoNumber(startNumber: 15, style: "<b>(<u>##</u>)"))
             .AddSequence("Bob", "Alice", "Another authentication Response")
             .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
-                .WithAutoNumber(40, 10, "<font color=red><b>Message 0  "))
+                .WithAutoNumber(startNumber: 40, increment: 10, style: "<font color=red><b>Message 0  "))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .Build();
 
@@ -307,6 +307,44 @@ autonumber 15 ""<b>(<u>##</u>)""
 Bob -> Alice : Another authentication Request
 Bob <- Alice : Another authentication Response
 autonumber 40 10 ""<font color=red><b>Message 0  ""
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_AutoNumber_Stop_Resume()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Authentication Request")
+                .WithAutoNumber(startNumber: 10, increment: 10, style: "<b>[000]"))
+            .AddSequence("Bob", "Alice", "Authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true)
+                .WithAutoNumber(autoNumberBreak: AutoNumberBreak.Stop))
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
+                .WithAutoNumber(style: "<font color=red><b>Message 0  ", autoNumberBreak: AutoNumberBreak.Resume))
+            .AddSequence("Bob", "Alice", "Yet another authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true)
+                .WithAutoNumber(autoNumberBreak: AutoNumberBreak.Stop))
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
+                .WithAutoNumber(increment: 1, style: "<font color=blue><b>Message 0  ", autoNumberBreak: AutoNumberBreak.Resume))
+            .AddSequence("Bob", "Alice", "Yet another authentication Response")
+            .Build();
+
+        const string expected = @"@startuml
+autonumber 10 10 ""<b>[000]""
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+autonumber stop
+Bob -> Alice : dummy
+autonumber resume ""<font color=red><b>Message 0  ""
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+autonumber stop
+Bob -> Alice : dummy
+autonumber resume 1 ""<font color=blue><b>Message 0  ""
 Bob -> Alice : Yet another authentication Request
 Bob <- Alice : Yet another authentication Response
 @enduml";

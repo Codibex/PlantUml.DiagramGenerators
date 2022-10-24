@@ -22,28 +22,32 @@ public class SequenceBuilder : UmlBuilder
 
         var sourceToTargetSequence = $"{sequence.SourceParticipant}_{sequence.TargetParticipant}";
         var targetToSourceSequence = $"{sequence.TargetParticipant}_{sequence.SourceParticipant}";
-        if (_sequences.Contains(sourceToTargetSequence) == false &&
-            _sequences.Contains(targetToSourceSequence) == false)
+        if (sequence.IgnoreForAutomaticArrowDirectionDetection == false)
         {
-            _sequences.Add(sourceToTargetSequence);
-            currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
-        }
-        else
-        {
-            bool sourceCountExists = _sequences.Count(s => s.Equals(sourceToTargetSequence)) > 0;
-
-            if (sourceCountExists)
+            if (_sequences.Contains(sourceToTargetSequence) == false &&
+                _sequences.Contains(targetToSourceSequence) == false)
             {
                 _sequences.Add(sourceToTargetSequence);
-                currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
-                    ? ArrowDirection.TargetToSource
-                    : ArrowDirection.SourceToTarget;
+                currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
             }
             else
             {
-                _sequences.Add(targetToSourceSequence);
+                bool sourceCountExists = _sequences.Count(s => s.Equals(sourceToTargetSequence)) > 0;
+
+                if (sourceCountExists)
+                {
+                    _sequences.Add(sourceToTargetSequence);
+                    currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
+                        ? ArrowDirection.TargetToSource
+                        : ArrowDirection.SourceToTarget;
+                }
+                else
+                {
+                    _sequences.Add(targetToSourceSequence);
+                }
             }
         }
+
         if (sequence.AutoNumber is not null)
         {
             AddEntry(sequence.AutoNumber.GetStatement());
