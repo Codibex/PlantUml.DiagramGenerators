@@ -283,4 +283,34 @@ Bob <- Alice : Yet another authentication Response
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_AutoNumber_With_Style()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Authentication Request")
+                .WithAutoNumber(style: "<b>[000]"))
+            .AddSequence("Bob", "Alice", "Authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Another authentication Request")
+                .WithAutoNumber(15, style: "<b>(<u>##</u>)"))
+            .AddSequence("Bob", "Alice", "Another authentication Response")
+            .AddSequence(new Uml.Sequence.Sequence("Bob", "Alice", "Yet another authentication Request")
+                .WithAutoNumber(40, 10, "<font color=red><b>Message 0  "))
+            .AddSequence("Bob", "Alice", "Yet another authentication Response")
+            .Build();
+
+        const string expected = @"@startuml
+autonumber ""<b>[000]""
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+autonumber 15 ""<b>(<u>##</u>)""
+Bob -> Alice : Another authentication Request
+Bob <- Alice : Another authentication Response
+autonumber 40 10 ""<font color=red><b>Message 0  ""
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }

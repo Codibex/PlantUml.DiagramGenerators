@@ -1,13 +1,13 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-public record AutoNumber(int? StartNumber, int? Increment)
+public record AutoNumber(int? StartNumber, int? Increment, string? Style)
 {
     public string GetStatement()
     {
         var number = GetNumberStatement();
         var increment = GetIncrementStatement();
-
-        return $"autonumber{number}{increment}";
+        var style = GetStyleStatement();
+        return $"autonumber{number}{increment}{style}";
     }
 
     private string GetNumberStatement() =>
@@ -19,4 +19,9 @@ public record AutoNumber(int? StartNumber, int? Increment)
         Increment is null
             ? string.Empty
             : $" {Increment}";
+
+    private string GetStyleStatement() =>
+        Style is null
+            ? string.Empty
+            : $" \"{Style}\"";
 };

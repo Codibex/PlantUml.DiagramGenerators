@@ -14,9 +14,9 @@ public class Sequence
         Description = description;
     }
 
-    public Sequence WithAutoNumber(int? startNumber = null, int? increment = null)
+    public Sequence WithAutoNumber(int? startNumber = null, int? increment = null, string? style = null)
     {
-        AutoNumber = new AutoNumber(startNumber, increment);
+        AutoNumber = new AutoNumber(startNumber, increment, style);
         return this;
     }
 }
