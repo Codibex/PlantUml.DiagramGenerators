@@ -9,6 +9,8 @@ public class Participant
 
     public int? Order { get; private set; }
 
+    public string? Declaration { get; set; }
+
     private Participant(string name, string? alias, ParticipantType type)
     {
         Name = name;
@@ -52,6 +54,12 @@ public class Participant
         return this;
     }
 
+    public Participant WithMultilineDeclaration(string declaration)
+    {
+        Declaration = declaration;
+        return this;
+    }
+
     public string GetStatement()
     {
         string participantStatement = Type switch
@@ -68,6 +76,7 @@ public class Participant
         };
 
         participantStatement = $"{participantStatement} {GetName()}";
+        participantStatement = AppendDeclaration(participantStatement);
         participantStatement = AppendAlias(participantStatement);
         participantStatement = AppendOrder(participantStatement);
         participantStatement = AppendColor(participantStatement);
@@ -87,21 +96,26 @@ public class Participant
             : $"\"{Name}\"";
     }
 
-    private string AppendAlias(string participantStatement)
+    private string AppendDeclaration(string participantStatement)
     {
-        string alias = string.IsNullOrWhiteSpace(Alias)
-            ? participantStatement
-            : $"{participantStatement} as {Alias}";
-        return alias;
+        if (string.IsNullOrWhiteSpace(Declaration))
+        {
+            return participantStatement;
+        }
+        
+        string lines = string.Join(Environment.NewLine, Declaration.Split(Environment.NewLine).Select(l => $"\t{l}"));
+        return $"{participantStatement} [{Environment.NewLine}{lines}{Environment.NewLine}]";
     }
 
-    private string AppendOrder(string participantStatement)
-    {
-        string alias = Order is null
+    private string AppendAlias(string participantStatement) =>
+        string.IsNullOrWhiteSpace(Alias)
+            ? participantStatement
+            : $"{participantStatement} as {Alias}";
+
+    private string AppendOrder(string participantStatement) =>
+        Order is null
             ? participantStatement
             : $"{participantStatement} order {Order}";
-        return alias;
-    }
 
     private string AppendColor(string participantStatement) =>
         string.IsNullOrWhiteSpace(Color)

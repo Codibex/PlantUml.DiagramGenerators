@@ -113,4 +113,28 @@ participant First order 10
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Participant_Multiline()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddParticipant(Participant.CreateParticipant("Participant").WithMultilineDeclaration(@"=Title
+----
+""SubTitle"""))
+            .AddParticipant(Participant.CreateParticipant("Bob"))
+            .AddSequence("Participant", "Bob")
+            .Build();
+
+        const string expected = @"@startuml
+participant Participant [
+	=Title
+	----
+	""SubTitle""
+]
+participant Bob
+Participant -> Bob
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
