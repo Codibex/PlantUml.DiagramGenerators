@@ -137,4 +137,39 @@ Participant -> Bob
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Participant_NonLetters()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Alice", "Bob()", "Hello")
+            .AddSequence("Bob()", "This is very\\nlong as Long")
+            .AddSequence("Long", "Bob()", "ok", arrowOptions: new ArrowOptions
+            {
+                Style = ArrowStyle.Dotted
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> ""Bob()"" : Hello
+""Bob()"" -> ""This is very\nlong"" as Long
+Long --> ""Bob()"" : ok
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Message_To_Self()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Alice", "Alice", "This is a signal to self.\\nIt also demonstrates\\nmultiline \\ntext")
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Alice : This is a signal to self.\nIt also demonstrates\nmultiline \ntext
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }

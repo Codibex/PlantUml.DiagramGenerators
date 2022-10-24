@@ -112,7 +112,26 @@ public class SequenceBuilder : UmlBuilder
 
     private static string GetSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription, ArrowOptions arrowOptions)
     {
-        return AppendDescription($"{sourceParticipant} {GetArrow(arrowOptions)} {targetParticipant}", sequenceDescription);
+        var sourceParticipantStatement = GetParticipantStatement(sourceParticipant);
+        var targetParticipantStatement = GetParticipantStatement(targetParticipant);
+        return AppendDescription($"{sourceParticipantStatement} {GetArrow(arrowOptions)} {targetParticipantStatement}", sequenceDescription);
+    }
+
+    private static string GetParticipantStatement(string participant)
+    {
+        if (participant.Split(' ').Length > 1)
+        {
+            var parts = participant.Split("as");
+
+            return $"\"{parts[0].TrimEnd()}\" as {parts[1].TrimStart()}";
+        }
+
+        if (participant.All(char.IsLetterOrDigit))
+        {
+            return participant;
+        }
+
+        return $"\"{participant}\"";
     }
 
     private static string GetArrow(ArrowOptions arrowOptions)
