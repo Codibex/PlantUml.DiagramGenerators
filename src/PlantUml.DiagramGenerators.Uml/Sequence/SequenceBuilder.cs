@@ -9,40 +9,35 @@ public class SequenceBuilder : UmlBuilder
     {
     }
 
-    public SequenceBuilder AddSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription = null, ArrowOptions? arrowOptions = null)
+    public SequenceBuilder AddSequence(string sourceParticipant, string targetParticipant,
+        string? sequenceDescription = null, ArrowOptions? arrowOptions = null)
     {
         var currentArrowOptions = arrowOptions ?? new ArrowOptions();
 
         var sourceToTargetSequence = $"{sourceParticipant}_{targetParticipant}";
         var targetToSourceSequence = $"{targetParticipant}_{sourceParticipant}";
-        if (_sequences.Contains(sourceToTargetSequence) == false && _sequences.Contains(targetToSourceSequence) == false)
+        if (_sequences.Contains(sourceToTargetSequence) == false &&
+            _sequences.Contains(targetToSourceSequence) == false)
         {
             _sequences.Add(sourceToTargetSequence);
             currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
         }
         else
         {
-            bool sourceCountExists = _sequences.Count(s => s.Equals(sourceToTargetSequence)) > 1;
-            bool targetCountExists = _sequences.Count(s => s.Equals(targetToSourceSequence)) > 1;
-            if ( sourceCountExists||targetCountExists)
+            bool sourceCountExists = _sequences.Count(s => s.Equals(sourceToTargetSequence)) > 0;
+
+            if (sourceCountExists)
             {
-                if (sourceCountExists)
-                {
-                    _sequences.Add(sourceToTargetSequence);
-                    currentArrowOptions.Direction = ArrowDirection.TargetToSource;
-                }
-                else
-                {
-                    currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
-                }
+                _sequences.Add(sourceToTargetSequence);
+                currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0 
+                    ? ArrowDirection.TargetToSource 
+                    : ArrowDirection.SourceToTarget;
             }
             else
             {
-                _sequences.Add(sourceToTargetSequence);
-                currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
+                _sequences.Add(targetToSourceSequence);
             }
         }
-        
 
         AddEntry(GetSequence(sourceParticipant, targetParticipant, sequenceDescription, currentArrowOptions));
         return this;

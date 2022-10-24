@@ -73,7 +73,12 @@ public class SequenceDiagramBuilder
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(UmlConstants.START_TAG);
-        
+
+        if (currentOptions.AutoNumber)
+        {
+            stringBuilder.AppendLine("autonumber");
+        }
+
         foreach (string additionalOption in currentOptions.AdditionalOptions)
         {
             stringBuilder.AppendLine(additionalOption);

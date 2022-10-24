@@ -241,4 +241,24 @@ Alice -[#0000FF]-> Bob : ok
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_AutoNumber()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Bob", "Alice", "Authentication Request")
+            .AddSequence("Bob", "Alice", "Authentication Response")
+            .Build(options =>
+            {
+                options.AutoNumber = true;
+            });
+
+        const string expected = @"@startuml
+autonumber
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
