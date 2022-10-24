@@ -1,6 +1,6 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-public enum ArrowStyle
+public enum ArrowLineStyle
 {
     Normal,
     Dotted

@@ -11,11 +11,53 @@ internal class ArrowBuilder
 
     public string Build()
     {
-        return _options.Style switch
+        string colorAndStyleText = GetColorAndStyleStatement();
+
+        string arrow = _options.LineStyle switch
         {
-            ArrowStyle.Normal => _options.Direction == ArrowDirection.SourceToTarget ? "->" : "<-",
-            ArrowStyle.Dotted => _options.Direction == ArrowDirection.SourceToTarget ? "-->" : "<--",
+            ArrowLineStyle.Normal => _options.Direction == ArrowDirection.SourceToTarget ? "->" : "<-",
+            ArrowLineStyle.Dotted => _options.Direction == ArrowDirection.SourceToTarget ? "-->" : "<--",
             _ => throw new ArgumentOutOfRangeException()
         };
+
+        if (string.IsNullOrWhiteSpace(colorAndStyleText))
+        {
+            return arrow;
+        }
+
+        return arrow.Insert(1, colorAndStyleText);
+    }
+
+    private string GetColorAndStyleStatement()
+    {
+        bool colorSet = string.IsNullOrWhiteSpace(_options.Color) == false;
+        bool styleSet = string.IsNullOrWhiteSpace(_options.Style) == false;
+
+        if (colorSet == false && styleSet == false)
+        {
+            return string.Empty;
+        }
+
+        var statement = "[";
+        if (colorSet)
+        {
+            statement += _options.Color;
+        }
+
+        if (styleSet == false)
+        {
+            return $"{statement}]";
+        }
+
+        if (colorSet)
+        {
+            statement += $",{_options.Style}";
+        }
+        else
+        {
+            statement += $"{_options.Style}";
+        }
+
+        return $"{statement}]";
     }
 }

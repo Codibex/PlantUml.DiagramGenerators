@@ -11,12 +11,12 @@ public class SequenceDiagramBuilderTests
             .AddSequence("Alice", "Bob", "Authentication Request")
             .AddSequence("Bob", "Alice", "Authentication Response", new ArrowOptions
             {
-                Style = ArrowStyle.Dotted
+                LineStyle = ArrowLineStyle.Dotted
             })
             .AddSequence("Alice", "Bob", "Another authentication Request")
             .AddSequence("Alice", "Bob", "Another authentication Response", new ArrowOptions
             {
-                Style = ArrowStyle.Dotted
+                LineStyle = ArrowLineStyle.Dotted
             })
             .Build();
 
@@ -146,7 +146,7 @@ Participant -> Bob
             .AddSequence("Bob()", "This is very\\nlong as Long")
             .AddSequence("Long", "Bob()", "ok", arrowOptions: new ArrowOptions
             {
-                Style = ArrowStyle.Dotted
+                LineStyle = ArrowLineStyle.Dotted
             })
             .Build();
 
@@ -214,6 +214,29 @@ Alice -> Bob : Response
 skinparam responseMessageBelowArrow true
 Bob -> Alice : hello
 Alice -> Bob : ok
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Arrow_Color()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence("Bob", "Alice", "hello", arrowOptions: new ArrowOptions
+            {
+                Color = "#red"
+            })
+            .AddSequence("Alice", "Bob", "ok", arrowOptions: new ArrowOptions
+            {
+                Color = "#0000FF",
+                LineStyle = ArrowLineStyle.Dotted
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Bob -[#red]> Alice : hello
+Alice -[#0000FF]-> Bob : ok
 @enduml";
 
         uml.Should().Be(expected);
