@@ -85,6 +85,12 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         return this;
     }
 
+    public SequenceDiagramBuilder AddNote(NoteOptions noteOptions)
+    {
+        UmlBuilder.AddNote(noteOptions);
+        return this;
+    }
+
     public SequenceDiagramBuilder AddPageHeader(string header)
     {
         UmlBuilder.AddPageHeader(header);

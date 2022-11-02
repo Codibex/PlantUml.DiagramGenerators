@@ -1,7 +1,10 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿using PlantUml.DiagramGenerators.Uml.State;
+
+namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class ParticipantOptions
 {
+    private List<NoteOptions> _noteOptions = new();
     internal string Name { get; }
     internal string? Alias { get; }
     internal ParticipantType Type { get; }
@@ -10,6 +13,8 @@ public class ParticipantOptions
     internal int? Order { get; private set; }
 
     internal string? Declaration { get; private set; }
+
+    public IReadOnlyList<NoteOptions> NoteOptions => _noteOptions;
 
     private ParticipantOptions(string name, string? alias, ParticipantType type)
     {
@@ -58,5 +63,32 @@ public class ParticipantOptions
     {
         Declaration = declaration;
         return this;
+    }
+
+    public ParticipantOptions WithNote(string note, NotePosition notePosition, string? color = null)
+    {
+        var noteOption = new NoteOptions(note, notePosition)
+            
+            .WithParticipant(this);
+
+        if (color is not null)
+        {
+            noteOption = noteOption.WithColor(color);
+        }
+
+        _noteOptions.Add(noteOption);
+        return this;
+    }
+
+    public string GetName()
+    {
+        if (string.IsNullOrWhiteSpace(Alias))
+        {
+            return Name;
+        }
+
+        return Name.Split(' ').Length == 1
+            ? Name
+            : $"\"{Name}\"";
     }
 }

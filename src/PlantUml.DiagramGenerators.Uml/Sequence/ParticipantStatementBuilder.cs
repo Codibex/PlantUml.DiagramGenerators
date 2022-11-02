@@ -21,7 +21,7 @@ internal class ParticipantStatementBuilder : StatementBuilderBase<ParticipantOpt
             _ => throw new ArgumentOutOfRangeException(nameof(Type), Options.Type, null)
         };
 
-        participantStatement = $"{participantStatement} {GetName()}";
+        participantStatement = $"{participantStatement} {Options.GetName()}";
         participantStatement = AppendDeclaration(participantStatement);
         participantStatement = AppendAlias(participantStatement);
         participantStatement = AppendOrder(participantStatement);
@@ -30,17 +30,7 @@ internal class ParticipantStatementBuilder : StatementBuilderBase<ParticipantOpt
         return participantStatement;
     }
 
-    private string GetName()
-    {
-        if (string.IsNullOrWhiteSpace(Options.Alias))
-        {
-            return Options.Name;
-        }
-
-        return Options.Name.Split(' ').Length == 1
-            ? Options.Name
-            : $"\"{Options.Name}\"";
-    }
+    
 
     private string AppendDeclaration(string participantStatement)
     {

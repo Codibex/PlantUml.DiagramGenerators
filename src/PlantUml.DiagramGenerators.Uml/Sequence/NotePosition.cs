@@ -2,9 +2,7 @@
 
 public enum NotePosition
 {
-    Undefined,
     Left,
-    Top,
     Right,
-    Bottom
+    Over
 }

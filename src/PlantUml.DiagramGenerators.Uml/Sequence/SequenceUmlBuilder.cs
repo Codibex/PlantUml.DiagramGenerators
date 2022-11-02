@@ -36,6 +36,11 @@ public class SequenceUmlBuilder : UmlBuilder
     public SequenceUmlBuilder AddParticipant(ParticipantOptions participantOptions)
     {
         AddEntry(new ParticipantStatementBuilder(participantOptions).Build());
+        foreach (var noteOption in participantOptions.NoteOptions)
+        {
+            AddNote(noteOption);
+        }
+        
         return this;
     }
 
@@ -96,9 +101,12 @@ public class SequenceUmlBuilder : UmlBuilder
 
     public SequenceUmlBuilder AddNote(string note, NotePosition position)
     {
-        AddEntry($"note {position.ToString().ToLower()}");
-        AddEntry(note);
-        AddEntry("end note");
+        return AddNote(new NoteOptions(note, position));
+    }
+
+    public SequenceUmlBuilder AddNote(NoteOptions noteOption)
+    {
+        AddEntry(new NoteUmlBuilder(NestingDepth).AddNote(noteOption).Build());
         return this;
     }
 
