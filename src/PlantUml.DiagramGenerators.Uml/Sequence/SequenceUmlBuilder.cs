@@ -1,4 +1,6 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿using System.Reflection.PortableExecutable;
+
+namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class SequenceUmlBuilder : UmlBuilder
 {
@@ -94,10 +96,30 @@ public class SequenceUmlBuilder : UmlBuilder
         return this;
     }
 
-    public void AddNote(string note, NotePosition position)
+    public SequenceUmlBuilder AddNote(string note, NotePosition position)
     {
         AddEntry($"note {position.ToString().ToLower()}");
         AddEntry(note);
         AddEntry("end note");
+        return this;
+    }
+
+    public SequenceUmlBuilder AddPageHeader(string header)
+    {
+        AddEntry($"header {header}");
+        return this;
+    }
+
+    public SequenceUmlBuilder AddPageFooter(string footer, bool includePageNumber)
+    {
+        var pageNumberStatement = includePageNumber ? " %page% of %lastpage%" : string.Empty;
+        AddEntry($"footer {footer}{pageNumberStatement}");
+        return this;
+    }
+
+    public SequenceUmlBuilder AddPageTitle(string title)
+    {
+        AddEntry($"title {title}");
+        return this;
     }
 }

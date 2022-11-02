@@ -254,4 +254,26 @@ Bob --> Alice : //This is the response %autonumber%//
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Page_Title_Header_Footer()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddPageHeader("Page Header")
+            .AddPageFooter("Page", true)
+            .AddPageTitle("Example Title")
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 1"))
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 2", ignoreForAutomaticArrowDirectionDetection: true))
+            .Build();
+
+        const string expected = @"@startuml
+header Page Header
+footer Page %page% of %lastpage%
+title Example Title
+Alice -> Bob : message 1
+Alice -> Bob : message 2
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }

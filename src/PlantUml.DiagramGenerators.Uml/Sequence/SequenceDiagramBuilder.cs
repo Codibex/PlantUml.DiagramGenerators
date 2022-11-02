@@ -84,4 +84,22 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddNote(note, position);
         return this;
     }
+
+    public SequenceDiagramBuilder AddPageHeader(string header)
+    {
+        UmlBuilder.AddPageHeader(header);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddPageFooter(string footer, bool includePageNumber)
+    {
+        UmlBuilder.AddPageFooter(footer, includePageNumber);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddPageTitle(string title)
+    {
+        UmlBuilder.AddPageTitle(title);
+        return this;
+    }
 }
