@@ -122,4 +122,11 @@ public class SequenceUmlBuilder : UmlBuilder
         AddEntry($"title {title}");
         return this;
     }
+
+    public SequenceUmlBuilder AddNewPage(string? title = null)
+    {
+        string statement = string.IsNullOrWhiteSpace(title) ? string.Empty : $" {title}";
+        AddEntry($"newpage{statement}");
+        return this;
+    }
 }

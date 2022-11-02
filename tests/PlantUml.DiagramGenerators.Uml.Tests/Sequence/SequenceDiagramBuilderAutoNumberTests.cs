@@ -118,7 +118,7 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.AutoNumberBreak = AutoNumberBreak.Stop;
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
+            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreAutomaticArrowDirectionDetection: true))
             .AddAutoNumber(config =>
             {
                 config.Style = "<font color=red><b>Message 0  ";
@@ -130,7 +130,7 @@ Bob <- Alice : Yet another authentication Response
                 {
                     config.AutoNumberBreak = AutoNumberBreak.Stop;
                 })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
+            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreAutomaticArrowDirectionDetection: true))
             .AddAutoNumber(config =>
             {
                 config.Increment = 1.ToString();
@@ -263,7 +263,7 @@ Bob --> Alice : //This is the response %autonumber%//
             .AddPageFooter("Page", true)
             .AddPageTitle("Example Title")
             .AddSequence(new SequenceOptions("Alice", "Bob", "message 1"))
-            .AddSequence(new SequenceOptions("Alice", "Bob", "message 2", ignoreForAutomaticArrowDirectionDetection: true))
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 2", ignoreAutomaticArrowDirectionDetection: true))
             .Build();
 
         const string expected = @"@startuml
@@ -272,6 +272,34 @@ footer Page %page% of %lastpage%
 title Example Title
 Alice -> Bob : message 1
 Alice -> Bob : message 2
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Splitting_Diagrams()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 1"))
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 2", ignoreAutomaticArrowDirectionDetection: true))
+            .AddNewPage()
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 3", ignoreAutomaticArrowDirectionDetection: true))
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 4", ignoreAutomaticArrowDirectionDetection: true))
+            .AddNewPage("A title for the\\nlast page")
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 5", ignoreAutomaticArrowDirectionDetection: true))
+            .AddSequence(new SequenceOptions("Alice", "Bob", "message 6", ignoreAutomaticArrowDirectionDetection: true))
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : message 1
+Alice -> Bob : message 2
+newpage
+Alice -> Bob : message 3
+Alice -> Bob : message 4
+newpage A title for the\nlast page
+Alice -> Bob : message 5
+Alice -> Bob : message 6
 @enduml";
 
         uml.Should().Be(expected);

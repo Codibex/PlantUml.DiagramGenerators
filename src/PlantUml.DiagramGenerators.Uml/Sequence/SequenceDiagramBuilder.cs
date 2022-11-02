@@ -102,4 +102,10 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddPageTitle(title);
         return this;
     }
+
+    public SequenceDiagramBuilder AddNewPage(string? title = null)
+    {
+        UmlBuilder.AddNewPage(title);
+        return this;
+    }
 }

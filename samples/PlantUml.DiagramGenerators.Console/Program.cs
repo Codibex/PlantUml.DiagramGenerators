@@ -121,6 +121,20 @@ string CreateUmlSequenceWithColor()
         .Build();
 }
 
+string BuildSplittingDiagrams()
+{
+    return new SequenceDiagramBuilder()
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 1"))
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 2", ignoreAutomaticArrowDirectionDetection: true))
+        .AddNewPage()
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 3", ignoreAutomaticArrowDirectionDetection: true))
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 4", ignoreAutomaticArrowDirectionDetection: true))
+        .AddNewPage("A title for the\\nlast page")
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 5", ignoreAutomaticArrowDirectionDetection: true))
+        .AddSequence(new SequenceOptions("Alice", "Bob", "message 6", ignoreAutomaticArrowDirectionDetection: true))
+        .Build();
+}
+
 async Task RenderFile(IPlantUmlRenderer renderer, string data, string file)
 {
     var bytes = await renderer.RenderAsync(data, OutputFormat.Png);
@@ -130,10 +144,13 @@ async Task RenderFile(IPlantUmlRenderer renderer, string data, string file)
 var factory = new RendererFactory();
 var renderer = factory.CreateRenderer(new PlantUmlSettings());
 
+// State
 await RenderFile(renderer, CreatePngFromJson(), "json");
 await RenderFile(renderer, CreateUmlCompositeState(), "uml_composite_state");
 await RenderFile(renderer, CreateUmlSubStateToSubState(), "uml_subState_to_subState");
 await RenderFile(renderer, CreateUmlLongName(), "uml_long_name");
 await RenderFile(renderer, CreateUmlFork(), "uml_fork");
 
+//Sequence
 await RenderFile(renderer, CreateUmlSequenceWithColor(), "uml_sequence_with_color");
+await RenderFile(renderer, BuildSplittingDiagrams(), "uml_sequence_page_split");

@@ -13,7 +13,7 @@ internal class SequenceStatementBuilder
     {
         var sourceToTargetSequence = $"{_sequenceOptions.SourceParticipant}_{_sequenceOptions.TargetParticipant}";
         var targetToSourceSequence = $"{_sequenceOptions.TargetParticipant}_{_sequenceOptions.SourceParticipant}";
-        if (_sequenceOptions.IgnoreForAutomaticArrowDirectionDetection == false)
+        if (_sequenceOptions.IgnoreAutomaticArrowDirectionDetection == false)
         {
             if (sequenceUmlBuilder.SequenceKeys.Contains(sourceToTargetSequence) == false &&
                 sequenceUmlBuilder.SequenceKeys.Contains(targetToSourceSequence) == false)
