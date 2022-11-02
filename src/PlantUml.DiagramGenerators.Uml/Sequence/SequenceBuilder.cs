@@ -10,25 +10,26 @@ public class SequenceBuilder : UmlBuilder
     }
 
     public SequenceBuilder AddSequence(string sourceParticipant, string targetParticipant,
-        string? sequenceDescription = null, ArrowOptions? arrowOptions = null)
+        string? sequenceDescription = null, Action<ArrowOptions>? arrowConfig = null)
     {
-        AddSequence(new Sequence(sourceParticipant, targetParticipant, sequenceDescription), arrowOptions);
+        AddSequence(new SequenceOptions(sourceParticipant, targetParticipant, sequenceDescription), arrowConfig);
         return this;
     }
 
-    public SequenceBuilder AddSequence(Sequence sequence, ArrowOptions? arrowOptions = null)
+    public SequenceBuilder AddSequence(SequenceOptions sequenceOptions, Action<ArrowOptions>? arrowConfig = null)
     {
-        var currentArrowOptions = arrowOptions ?? new ArrowOptions();
-
-        var sourceToTargetSequence = $"{sequence.SourceParticipant}_{sequence.TargetParticipant}";
-        var targetToSourceSequence = $"{sequence.TargetParticipant}_{sequence.SourceParticipant}";
-        if (sequence.IgnoreForAutomaticArrowDirectionDetection == false)
+        var sourceToTargetSequence = $"{sequenceOptions.SourceParticipant}_{sequenceOptions.TargetParticipant}";
+        var targetToSourceSequence = $"{sequenceOptions.TargetParticipant}_{sequenceOptions.SourceParticipant}";
+        if (sequenceOptions.IgnoreForAutomaticArrowDirectionDetection == false)
         {
             if (_sequences.Contains(sourceToTargetSequence) == false &&
                 _sequences.Contains(targetToSourceSequence) == false)
             {
                 _sequences.Add(sourceToTargetSequence);
-                currentArrowOptions.Direction = ArrowDirection.SourceToTarget;
+                arrowConfig += options =>
+                {
+                    options.Direction = ArrowDirection.SourceToTarget;
+                };
             }
             else
             {
@@ -37,9 +38,12 @@ public class SequenceBuilder : UmlBuilder
                 if (sourceCountExists)
                 {
                     _sequences.Add(sourceToTargetSequence);
-                    currentArrowOptions.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
+                    arrowConfig += options =>
+                    {
+                        options.Direction = _sequences.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
                         ? ArrowDirection.TargetToSource
                         : ArrowDirection.SourceToTarget;
+                    };
                 }
                 else
                 {
@@ -47,76 +51,75 @@ public class SequenceBuilder : UmlBuilder
                 }
             }
         }
-        AddEntry(GetSequence(sequence.SourceParticipant, sequence.TargetParticipant, sequence.Description, currentArrowOptions));
+        AddEntry(GetSequence(sequenceOptions.SourceParticipant, sequenceOptions.TargetParticipant, sequenceOptions.Description, arrowConfig));
         return this;
     }
 
     public SequenceBuilder AddParticipant(string participantName, string alias)
     {
-        var participant = Participant.CreateParticipant(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateParticipant(participantName, alias);
+        AddEntry(participant.Build());
         return this;
     }
 
-    public SequenceBuilder AddParticipant(Participant participant)
+    public SequenceBuilder AddParticipant(ParticipantBuilder participantBuilder)
     {
-        AddEntry(participant.GetStatement());
+        AddEntry(participantBuilder.Build());
         return this;
     }
 
     public SequenceBuilder AddActor(string participantName, string alias)
     {
-        var participant = Participant.CreateActor(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateActor(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddBoundary(string participantName, string alias)
     {
-        var participant = Participant.CreateBoundary(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateBoundary(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddControl(string participantName, string alias)
     {
-        var participant = Participant.CreateControl(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateControl(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddEntity(string participantName, string alias)
     {
-        var participant = Participant.CreateEntity(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateEntity(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddDatabase(string participantName, string alias)
     {
-        var participant = Participant.CreateDatabase(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateDatabase(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddCollections(string participantName, string alias)
     {
-        var participant = Participant.CreateCollections(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateCollections(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
     public SequenceBuilder AddQueue(string participantName, string alias)
     {
-        var participant = Participant.CreateQueue(participantName, alias);
-        AddEntry(participant.GetStatement());
+        var participant = ParticipantBuilder.CreateQueue(participantName, alias);
+        AddParticipant(participant);
         return this;
     }
 
-    public SequenceBuilder AddAutoNumber(string? startNumber, string? increment, string? style, AutoNumberBreak? @break)
+    public SequenceBuilder AddAutoNumber(Action<AutoNumberOptions>? config = null)
     {
-        var autoNumber = new AutoNumber(startNumber, increment, style, @break);
-        AddEntry(autoNumber.GetStatement());
+        AddEntry(new AutoNumberBuilder().Build(config));
         return this;
     }
 
@@ -127,11 +130,22 @@ public class SequenceBuilder : UmlBuilder
         AddEntry("end note");
     }
 
-    private static string GetSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription, ArrowOptions arrowOptions)
+    internal string Build()
+    {
+        var stringBuilder = new StringBuilder();
+        foreach (string value in Statements.Values)
+        {
+            stringBuilder.AppendLine(value);
+        }
+
+        return stringBuilder.ToString().TrimEnd();
+    }
+
+    private static string GetSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription, Action<ArrowOptions>? arrowConfig = null)
     {
         var sourceParticipantStatement = GetParticipantStatement(sourceParticipant);
         var targetParticipantStatement = GetParticipantStatement(targetParticipant);
-        return AppendDescription($"{sourceParticipantStatement} {GetArrow(arrowOptions)} {targetParticipantStatement}", sequenceDescription);
+        return AppendDescription($"{sourceParticipantStatement} {GetArrow(arrowConfig)} {targetParticipantStatement}", sequenceDescription);
     }
 
     private static string GetParticipantStatement(string participant)
@@ -147,22 +161,9 @@ public class SequenceBuilder : UmlBuilder
             : $"\"{participant}\"";
     }
 
-    private static string GetArrow(ArrowOptions arrowOptions)
-    {
-        return new ArrowBuilder(arrowOptions).Build();
-    }
+    private static string GetArrow(Action<ArrowOptions>? arrowConfig = null) 
+        => new ArrowStatementBuilder().Build(arrowConfig);
 
     private static string AppendDescription(string transition, string? sequenceDescription)
         => string.IsNullOrWhiteSpace(sequenceDescription) ? transition : $"{transition} : {sequenceDescription}";
-
-    internal string Build()
-    {
-        var stringBuilder = new StringBuilder();
-        foreach (string value in Statements.Values)
-        {
-            stringBuilder.AppendLine(value);
-        }
-
-        return stringBuilder.ToString().TrimEnd();
-    }
 }

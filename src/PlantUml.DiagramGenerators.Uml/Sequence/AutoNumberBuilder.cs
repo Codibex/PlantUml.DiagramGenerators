@@ -1,8 +1,8 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-public record AutoNumber(string? StartNumber, string? Increment, string? Style, AutoNumberBreak? AutoNumberBreak)
+internal class AutoNumberBuilder : StatementBuilderBase<AutoNumberOptions>
 {
-    public string GetStatement()
+    protected override string GetStatement()
     {
         string autoNumberBreak = GetAutoNumberBreak();
         string number = GetNumberStatement();
@@ -12,28 +12,28 @@ public record AutoNumber(string? StartNumber, string? Increment, string? Style, 
     }
 
     private string GetAutoNumberBreak() =>
-        AutoNumberBreak switch
+        Options.AutoNumberBreak switch
         {
-            Uml.Sequence.AutoNumberBreak.Stop => " stop",
-            Uml.Sequence.AutoNumberBreak.Resume => " resume",
+            AutoNumberBreak.Stop => " stop",
+            AutoNumberBreak.Resume => " resume",
             null => string.Empty,
             _ => throw new ArgumentOutOfRangeException()
         };
 
     private string GetNumberStatement() =>
-        string.IsNullOrWhiteSpace(StartNumber)
+        string.IsNullOrWhiteSpace(Options.StartNumber)
             ? string.Empty
-            : $" {StartNumber}";
+            : $" {Options.StartNumber}";
 
     private string GetIncrementStatement() =>
-        string.IsNullOrWhiteSpace(Increment)
+        string.IsNullOrWhiteSpace(Options.Increment)
             ? string.Empty
-            : Increment.Any(char.IsLetter) 
-                ? $" inc {Increment}"
-                : $" {Increment}";
+            : Options.Increment.Any(char.IsLetter)
+                ? $" inc {Options.Increment}"
+                : $" {Options.Increment}";
 
     private string GetStyleStatement() =>
-        string.IsNullOrWhiteSpace(Style)
+        string.IsNullOrWhiteSpace(Options.Style)
             ? string.Empty
-            : $" \"{Style}\"";
-};
+            : $" \"{Options.Style}\"";
+}

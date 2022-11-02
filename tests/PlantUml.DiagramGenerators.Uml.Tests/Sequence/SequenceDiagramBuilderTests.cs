@@ -9,14 +9,14 @@ public class SequenceDiagramBuilderTests
     {
         string uml = new SequenceDiagramBuilder()
             .AddSequence("Alice", "Bob", "Authentication Request")
-            .AddSequence("Bob", "Alice", "Authentication Response", new ArrowOptions
+            .AddSequence("Bob", "Alice", "Authentication Response", config =>
             {
-                LineStyle = ArrowLineStyle.Dotted
+                config.LineStyle = ArrowLineStyle.Dotted;
             })
             .AddSequence("Alice", "Bob", "Another authentication Request")
-            .AddSequence("Alice", "Bob", "Another authentication Response", new ArrowOptions
+            .AddSequence("Alice", "Bob", "Another authentication Response", config =>
             {
-                LineStyle = ArrowLineStyle.Dotted
+                config.LineStyle = ArrowLineStyle.Dotted;
             })
             .Build();
 
@@ -76,9 +76,9 @@ Foo -> Foo7 : To queue
     public void Build_Participant_WithColor()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(Participant.CreateActor("Bob").WithColor("#red"))
-            .AddParticipant(Participant.CreateParticipant("Alice"))
-            .AddParticipant(Participant.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
+            .AddParticipant(ParticipantBuilder.CreateActor("Bob").WithColor("#red"))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("Alice"))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
             .AddSequence("Alice", "Bob", "Authentication Request")
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddSequence("Bob", "L", "Log transaction")
@@ -100,9 +100,9 @@ Bob -> L : Log transaction
     public void Build_Order()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(Participant.CreateParticipant("Last").WithOrder(30))
-            .AddParticipant(Participant.CreateParticipant("Middle").WithOrder(20))
-            .AddParticipant(Participant.CreateParticipant("First").WithOrder(10))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("Last").WithOrder(30))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("Middle").WithOrder(20))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("First").WithOrder(10))
             .Build();
 
         const string expected = @"@startuml
@@ -118,10 +118,10 @@ participant First order 10
     public void Build_Participant_Multiline()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(Participant.CreateParticipant("Participant").WithMultilineDeclaration(@"=Title
+            .AddParticipant(ParticipantBuilder.CreateParticipant("Participant").WithMultilineDeclaration(@"=Title
 ----
 ""SubTitle"""))
-            .AddParticipant(Participant.CreateParticipant("Bob"))
+            .AddParticipant(ParticipantBuilder.CreateParticipant("Bob"))
             .AddSequence("Participant", "Bob")
             .Build();
 
@@ -144,9 +144,10 @@ Participant -> Bob
         string uml = new SequenceDiagramBuilder()
             .AddSequence("Alice", "Bob()", "Hello")
             .AddSequence("Bob()", "This is very\\nlong as Long")
-            .AddSequence("Long", "Bob()", "ok", arrowOptions: new ArrowOptions
+            .AddSequence("Long", "Bob()", "ok", config =>
             {
-                LineStyle = ArrowLineStyle.Dotted
+
+                config.LineStyle = ArrowLineStyle.Dotted;
             })
             .Build();
 
@@ -217,14 +218,14 @@ Alice -> Bob : ok
     public void Build_Arrow_Color()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddSequence("Bob", "Alice", "hello", arrowOptions: new ArrowOptions
+            .AddSequence("Bob", "Alice", "hello", config =>
             {
-                Color = "#red"
+                config.Color = "#red";
             })
-            .AddSequence("Alice", "Bob", "ok", arrowOptions: new ArrowOptions
+            .AddSequence("Alice", "Bob", "ok", config =>
             {
-                Color = "#0000FF",
-                LineStyle = ArrowLineStyle.Dotted
+                config.Color = "#0000FF";
+                config.LineStyle = ArrowLineStyle.Dotted;
             })
             .Build();
 

@@ -6,15 +6,15 @@ public class SequenceDiagramBuilder
 {
     private readonly SequenceBuilder _builder = new(0);
 
-    public SequenceDiagramBuilder AddSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription = null, ArrowOptions? arrowOptions = null)
+    public SequenceDiagramBuilder AddSequence(string sourceParticipant, string targetParticipant, string? sequenceDescription = null, Action<ArrowOptions>? arrowConfig = null)
     {
-        _builder.AddSequence(sourceParticipant, targetParticipant, sequenceDescription, arrowOptions);
+        _builder.AddSequence(sourceParticipant, targetParticipant, sequenceDescription, arrowConfig);
         return this;
     }
 
-    public SequenceDiagramBuilder AddSequence(Sequence sequence, ArrowOptions? arrowOptions = null)
+    public SequenceDiagramBuilder AddSequence(SequenceOptions sequenceOptions, Action<ArrowOptions>? arrowConfig = null)
     {
-        _builder.AddSequence(sequence, arrowOptions);
+        _builder.AddSequence(sequenceOptions, arrowConfig);
         return this;
     }
 
@@ -24,9 +24,9 @@ public class SequenceDiagramBuilder
         return this;
     }
 
-    public SequenceDiagramBuilder AddParticipant(Participant participant)
+    public SequenceDiagramBuilder AddParticipant(ParticipantBuilder participantBuilder)
     {
-        _builder.AddParticipant(participant);
+        _builder.AddParticipant(participantBuilder);
         return this;
     }
 
@@ -72,10 +72,9 @@ public class SequenceDiagramBuilder
         return this;
     }
 
-    public SequenceDiagramBuilder AddAutoNumber(string? startNumber = null, string? increment = null,
-        string? style = null, AutoNumberBreak? @break = null)
+    public SequenceDiagramBuilder AddAutoNumber(Action<AutoNumberOptions>? config = null)
     {
-        _builder.AddAutoNumber(startNumber, increment, style, @break);
+        _builder.AddAutoNumber(config);
         return this;
     }
 
@@ -85,15 +84,15 @@ public class SequenceDiagramBuilder
         return this;
     }
 
-    public string Build(Action<SequenceDiagramOptions>? options = null)
+    public string Build(Action<SequenceDiagramOptions>? config = null)
     {
-        var currentOptions = SequenceDiagramOptions.Default;
-        options?.Invoke(currentOptions);
+        var options = SequenceDiagramOptions.Default;
+        config?.Invoke(options);
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(UmlConstants.START_TAG);
         
-        foreach (string additionalOption in currentOptions.AdditionalOptions)
+        foreach (string additionalOption in options.AdditionalOptions)
         {
             stringBuilder.AppendLine(additionalOption);
         }

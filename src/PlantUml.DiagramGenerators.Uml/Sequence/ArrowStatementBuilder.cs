@@ -1,22 +1,15 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-internal class ArrowBuilder
+internal class ArrowStatementBuilder : StatementBuilderBase<ArrowOptions>
 {
-    private readonly ArrowOptions _options;
-
-    public ArrowBuilder(ArrowOptions options)
-    {
-        _options = options;
-    }
-
-    public string Build()
+    protected override string GetStatement()
     {
         string colorAndStyleText = GetColorAndStyleStatement();
 
-        string arrow = _options.LineStyle switch
+        string arrow = Options.LineStyle switch
         {
-            ArrowLineStyle.Normal => _options.Direction == ArrowDirection.SourceToTarget ? "->" : "<-",
-            ArrowLineStyle.Dotted => _options.Direction == ArrowDirection.SourceToTarget ? "-->" : "<--",
+            ArrowLineStyle.Normal => Options.Direction == ArrowDirection.SourceToTarget ? "->" : "<-",
+            ArrowLineStyle.Dotted => Options.Direction == ArrowDirection.SourceToTarget ? "-->" : "<--",
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -30,8 +23,8 @@ internal class ArrowBuilder
 
     private string GetColorAndStyleStatement()
     {
-        bool colorSet = string.IsNullOrWhiteSpace(_options.Color) == false;
-        bool styleSet = string.IsNullOrWhiteSpace(_options.Style) == false;
+        bool colorSet = string.IsNullOrWhiteSpace(Options.Color) == false;
+        bool styleSet = string.IsNullOrWhiteSpace(Options.Style) == false;
 
         if (colorSet == false && styleSet == false)
         {
@@ -41,7 +34,7 @@ internal class ArrowBuilder
         var statement = "[";
         if (colorSet)
         {
-            statement += _options.Color;
+            statement += Options.Color;
         }
 
         if (styleSet == false)
@@ -51,11 +44,11 @@ internal class ArrowBuilder
 
         if (colorSet)
         {
-            statement += $",{_options.Style}";
+            statement += $",{Options.Style}";
         }
         else
         {
-            statement += $"{_options.Style}";
+            statement += $"{Options.Style}";
         }
 
         return $"{statement}]";

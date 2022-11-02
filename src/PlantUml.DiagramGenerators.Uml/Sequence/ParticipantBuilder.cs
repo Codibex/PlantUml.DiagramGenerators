@@ -1,66 +1,66 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-public class Participant
+public class ParticipantBuilder
 {
-    public string Name { get; }
-    public string? Alias { get; }
-    public ParticipantType Type { get; }
-    public string? Color { get; private set; }
+    private string Name { get; }
+    private string? Alias { get; }
+    private ParticipantType Type { get; }
+    private string? Color { get; set; }
 
-    public int? Order { get; private set; }
+    private int? Order { get; set; }
 
-    public string? Declaration { get; set; }
+    private string? Declaration { get; set; }
 
-    private Participant(string name, string? alias, ParticipantType type)
+    private ParticipantBuilder(string name, string? alias, ParticipantType type)
     {
         Name = name;
         Alias = alias;
         Type = type;
     }
 
-    public static Participant CreateParticipant(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateParticipant(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Participant);
 
-    public static Participant CreateActor(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateActor(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Actor);
 
-    public static Participant CreateBoundary(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateBoundary(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Boundary);
 
-    public static Participant CreateControl(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateControl(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Control);
 
-    public static Participant CreateEntity(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateEntity(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Entity);
 
-    public static Participant CreateDatabase(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateDatabase(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Database);
 
-    public static Participant CreateCollections(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateCollections(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Collections);
 
-    public static Participant CreateQueue(string name, string? alias = null) =>
+    public static ParticipantBuilder CreateQueue(string name, string? alias = null) =>
         new(name, alias, ParticipantType.Queue);
 
-    public Participant WithColor(string color)
+    public ParticipantBuilder WithColor(string color)
     {
         Color = color;
         return this;
     }
 
-    public Participant WithOrder(int order)
+    public ParticipantBuilder WithOrder(int order)
     {
         Order = order;
         return this;
     }
 
-    public Participant WithMultilineDeclaration(string declaration)
+    public ParticipantBuilder WithMultilineDeclaration(string declaration)
     {
         Declaration = declaration;
         return this;
     }
 
-    public string GetStatement()
+    public string Build()
     {
         string participantStatement = Type switch
         {
