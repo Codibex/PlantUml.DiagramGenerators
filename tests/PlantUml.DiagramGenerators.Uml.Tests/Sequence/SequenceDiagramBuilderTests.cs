@@ -2,6 +2,7 @@
 using PlantUml.DiagramGenerators.Uml.Sequence;
 
 namespace PlantUml.DiagramGenerators.Uml.Tests.Sequence;
+
 public class SequenceDiagramBuilderTests
 {
     [Fact]
