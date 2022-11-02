@@ -20,6 +20,11 @@ public class SequenceUmlBuilder : UmlBuilder
         return this;
     }
 
+    public SequenceUmlBuilder AddSequence(ParticipantOptions sourceParticipant, ParticipantOptions targetParticipant, string? sequenceDescription = null, Action<ArrowOptions>? arrowConfig = null)
+    {
+        return AddSequence(sourceParticipant.GetName(), targetParticipant.GetName(), sequenceDescription, arrowConfig);
+    }
+
     public SequenceUmlBuilder AddSequence(SequenceOptions sequenceOptions, Action<ArrowOptions>? arrowConfig = null)
     {
         AddEntry(new SequenceStatementBuilder(sequenceOptions).Build(this, arrowConfig));
@@ -164,6 +169,12 @@ public class SequenceUmlBuilder : UmlBuilder
         string loopStatement = loopBuilder.AddLoopBody(times, umlBuilderAction).Build();
 
         AddEntry(loopStatement, true);
+        return this;
+    }
+
+    public SequenceUmlBuilder AddDivider(string dividerText)
+    {
+        AddEntry($"== {dividerText} ==");
         return this;
     }
 }

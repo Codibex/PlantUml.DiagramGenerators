@@ -99,10 +99,10 @@ end note
         var server = ParticipantOptions.CreateParticipant("server");
 
         string uml = new SequenceDiagramBuilder()
-            .AddSequence(caller.GetName(), server.GetName(), "conReq")
+            .AddSequence(caller, server, "conReq")
             .AddNote(new NoteOptions("idle", NotePosition.Over).WithParticipant(caller)
                 .WithShape(NoteShape.Hexagonal))
-            .AddSequence(caller.GetName(), server.GetName(), "conConf")
+            .AddSequence(caller, server, "conConf")
             .AddNote(new NoteOptions(@" """"r"""" as rectangle
  """"h"""" as hexagon", NotePosition.Over)
                 .WithParticipant(server)
@@ -152,15 +152,15 @@ endhnote
         var charlie = ParticipantOptions.CreateParticipant("Charlie");
 
         string uml = new SequenceDiagramBuilder()
-            .AddSequence(alice.GetName(), bob.GetName(), "m1")
-            .AddSequence(bob.GetName(), charlie.GetName(), "m2")
+            .AddSequence(alice, bob, "m1")
+            .AddSequence(bob, charlie, "m2")
             .AddNote(new NoteOptions(@"Old method for note over all part. with:
 """"note over //FirstPart, LastPart//"""".", NotePosition.Over)
                 .WithParticipant(alice)
                 .WithParticipant(charlie))
             .AddNote(new NoteOptions(@"New method with:
 """"note across""""", NotePosition.Across))
-            .AddSequence(bob.GetName(), alice.GetName())
+            .AddSequence(bob, alice)
             .AddNote(new NoteOptions(@"Note across all part.", NotePosition.Across)
                 .WithShape(NoteShape.Hexagonal))
             .Build();
@@ -197,7 +197,7 @@ endhnote
             .AddNote(new NoteOptions(@"initial state of Bob", NotePosition.Over)
                 .WithParticipant(bob)
                 .WithAlignment())
-            .AddSequence(bob.GetName(), alice.GetName(), "hello")
+            .AddSequence(bob, alice, "hello")
             .Build();
 
         const string expected = @"@startuml
@@ -208,6 +208,39 @@ end note
 initial state of Bob
 end note
 Bob -> Alice : hello
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Divider()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateParticipant("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddDivider("Initialization")
+            .AddSequence(alice, bob, "Authentication Request")
+            .AddSequence(bob, alice, "Authentication Response", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .AddDivider("Repetition")
+            .AddSequence(alice, bob, "Another authentication Request")
+            .AddSequence(alice, bob, "another authentication Response", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Build();
+
+        const string expected = @"@startuml
+== Initialization ==
+Alice -> Bob : Authentication Request
+Bob --> Alice : Authentication Response
+== Repetition ==
+Alice -> Bob : Another authentication Request
+Alice <-- Bob : another authentication Response
 @enduml";
 
         uml.Should().Be(expected);

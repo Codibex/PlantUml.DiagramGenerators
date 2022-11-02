@@ -13,6 +13,12 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         return this;
     }
 
+    public SequenceDiagramBuilder AddSequence(ParticipantOptions sourceParticipant, ParticipantOptions targetParticipant, string? sequenceDescription = null, Action<ArrowOptions>? arrowConfig = null)
+    {
+        UmlBuilder.AddSequence(sourceParticipant, targetParticipant, sequenceDescription, arrowConfig);
+        return this;
+    }
+
     public SequenceDiagramBuilder AddSequence(SequenceOptions sequenceOptions, Action<ArrowOptions>? arrowConfig = null)
     {
         UmlBuilder.AddSequence(sequenceOptions, arrowConfig);
@@ -130,6 +136,12 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
     public SequenceDiagramBuilder AddLoop(int times, Action<SequenceUmlBuilder> umlBuilderAction)
     {
         UmlBuilder.AddLoop(times, umlBuilderAction);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddDivider(string dividerText)
+    {
+        UmlBuilder.AddDivider(dividerText);
         return this;
     }
 }
