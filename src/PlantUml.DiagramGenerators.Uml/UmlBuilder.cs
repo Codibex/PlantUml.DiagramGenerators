@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using PlantUml.DiagramGenerators.Uml.Utilities;
 
 namespace PlantUml.DiagramGenerators.Uml;
 
@@ -28,10 +29,7 @@ public abstract class UmlBuilder
 
     protected void AddEntry(string entry, bool ignoreTabs = false)
     {
-        string tabs = ignoreTabs ? string.Empty : GetTabs();
+        string tabs = ignoreTabs ? string.Empty : Tab.GetTabs(NestingDepth);
         Statements.Add(Statements.Count, $"{tabs}{entry}");
     }
-
-    private string GetTabs() =>
-        $"{string.Join("", Enumerable.Range(0, NestingDepth).Select(_ => "\t"))}";
 }

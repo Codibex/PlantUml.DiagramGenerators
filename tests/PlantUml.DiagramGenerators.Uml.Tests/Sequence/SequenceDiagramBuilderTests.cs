@@ -374,4 +374,68 @@ end
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Divider()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateParticipant("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddDivider("Initialization")
+            .AddSequence(alice, bob, "Authentication Request")
+            .AddSequence(bob, alice, "Authentication Response", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .AddDivider("Repetition")
+            .AddSequence(alice, bob, "Another authentication Request")
+            .AddSequence(alice, bob, "another authentication Response", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Build();
+
+        const string expected = @"@startuml
+== Initialization ==
+Alice -> Bob : Authentication Request
+Bob --> Alice : Authentication Response
+== Repetition ==
+Alice -> Bob : Another authentication Request
+Alice <-- Bob : another authentication Response
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Reference()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateActor("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddParticipant(alice)
+            .AddParticipant(bob)
+            .AddReference("init", alice, bob)
+            .AddSequence(alice, bob, "hello")
+            .AddReference(@"This can be on
+several lines", bob)
+            .Build();
+
+        const string expected = @"@startuml
+participant Alice
+actor Bob
+ref over Alice, Bob
+	init
+end ref
+Alice -> Bob : hello
+ref over Bob
+	This can be on
+	several lines
+end ref
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }

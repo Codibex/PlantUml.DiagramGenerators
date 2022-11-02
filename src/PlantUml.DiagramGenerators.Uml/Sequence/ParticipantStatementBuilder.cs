@@ -1,4 +1,6 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿using PlantUml.DiagramGenerators.Uml.Utilities;
+
+namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 internal class ParticipantStatementBuilder : StatementBuilderBase<ParticipantOptions>
 {
@@ -39,7 +41,7 @@ internal class ParticipantStatementBuilder : StatementBuilderBase<ParticipantOpt
             return participantStatement;
         }
 
-        string lines = string.Join(Environment.NewLine, Options.Declaration.Split(Environment.NewLine).Select(l => $"\t{l}"));
+        string lines = Options.Declaration.AddTabsPerLine(1);
         return $"{participantStatement} [{Environment.NewLine}{lines}{Environment.NewLine}]";
     }
 

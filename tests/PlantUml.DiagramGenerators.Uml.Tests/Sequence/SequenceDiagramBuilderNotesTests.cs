@@ -212,37 +212,4 @@ Bob -> Alice : hello
 
         uml.Should().Be(expected);
     }
-
-    [Fact]
-    public void Build_Divider()
-    {
-        var alice = ParticipantOptions.CreateParticipant("Alice");
-        var bob = ParticipantOptions.CreateParticipant("Bob");
-
-        string uml = new SequenceDiagramBuilder()
-            .AddDivider("Initialization")
-            .AddSequence(alice, bob, "Authentication Request")
-            .AddSequence(bob, alice, "Authentication Response", config =>
-            {
-                config.LineStyle = ArrowLineStyle.Dotted;
-            })
-            .AddDivider("Repetition")
-            .AddSequence(alice, bob, "Another authentication Request")
-            .AddSequence(alice, bob, "another authentication Response", config =>
-            {
-                config.LineStyle = ArrowLineStyle.Dotted;
-            })
-            .Build();
-
-        const string expected = @"@startuml
-== Initialization ==
-Alice -> Bob : Authentication Request
-Bob --> Alice : Authentication Response
-== Repetition ==
-Alice -> Bob : Another authentication Request
-Alice <-- Bob : another authentication Response
-@enduml";
-
-        uml.Should().Be(expected);
-    }
 }

@@ -144,4 +144,10 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddDivider(dividerText);
         return this;
     }
+
+    public SequenceDiagramBuilder AddReference(string referenceDescription, params ParticipantOptions[] participants)
+    {
+        UmlBuilder.AddReference(referenceDescription, participants);
+        return this;
+    }
 }

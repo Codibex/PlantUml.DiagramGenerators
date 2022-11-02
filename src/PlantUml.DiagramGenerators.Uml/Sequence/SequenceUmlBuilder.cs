@@ -177,4 +177,10 @@ public class SequenceUmlBuilder : UmlBuilder
         AddEntry($"== {dividerText} ==");
         return this;
     }
+
+    public SequenceUmlBuilder AddReference(string referenceDescription, params ParticipantOptions[] participants)
+    {
+        AddEntry(new ReferenceStatementBuilder(NestingDepth).AddReference(referenceDescription, participants).Build());
+        return this;
+    }
 }
