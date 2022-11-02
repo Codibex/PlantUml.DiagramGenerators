@@ -22,9 +22,15 @@ public partial class SkinParameter
     public static SkinParameter ClassFontColor(string color) 
         => new($"classFontColor {color}");
 
+    public static SkinParameter HandWritten()
+        => new("handwritten true");
+
+    public static SkinParameter ArrowColor(string color)
+        => new($"ArrowColor {color}");
+
     public static implicit operator string(SkinParameter parameter) => parameter.GetStatement();
 
-    public string GetStatement()
+    private string GetStatement()
     {
         return $"skinparam {Parameter}";
     }

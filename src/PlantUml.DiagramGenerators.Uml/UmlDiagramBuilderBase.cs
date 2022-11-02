@@ -50,7 +50,7 @@ public abstract class UmlDiagramBuilderBase<TUmlBuilder, TOptions>
         var options = Options.GetAllDefinedOptions();
         foreach (var diagramOption in options.Where(o => o.IsActive))
         {
-            stringBuilder.AppendLine(diagramOption.GetStatement());
+            stringBuilder.AppendLine(diagramOption);
         }
     }
 }

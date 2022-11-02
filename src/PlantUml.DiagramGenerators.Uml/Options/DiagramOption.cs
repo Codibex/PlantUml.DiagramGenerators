@@ -11,7 +11,9 @@ public partial class DiagramOption
         Parameter = parameter;
     }
 
-    internal string GetStatement()
+    public static implicit operator string(DiagramOption parameter) => parameter.GetStatement();
+
+    private string GetStatement()
     {
         return $"{Parameter}";
     }
