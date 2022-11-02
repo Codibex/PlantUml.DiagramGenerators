@@ -161,7 +161,7 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
     /// Adds a space
     /// </summary>
     /// <param name="space">Space in pixel</param>
-    /// <returns></returns>
+    /// <returns>The current builder instance</returns>
     public SequenceDiagramBuilder AddSpace(int? space = null)
     {
         UmlBuilder.AddSpace(space);

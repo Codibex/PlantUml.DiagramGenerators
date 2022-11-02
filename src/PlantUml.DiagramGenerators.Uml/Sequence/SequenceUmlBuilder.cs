@@ -180,7 +180,10 @@ public class SequenceUmlBuilder : UmlBuilder
 
     public SequenceUmlBuilder AddReference(string referenceDescription, params ParticipantOptions[] participants)
     {
-        AddEntry(new ReferenceStatementBuilder(NestingDepth).AddReference(referenceDescription, participants).Build());
+        var referenceBuilder = new ReferenceStatementBuilder(NestingDepth);
+        string referenceStatement = referenceBuilder.AddReference(referenceDescription, participants).Build();
+
+        AddEntry(referenceStatement);
         return this;
     }
 
@@ -198,7 +201,7 @@ public class SequenceUmlBuilder : UmlBuilder
     {
         string statement = space.HasValue
             ? $"||{space}||"
-            : $"|||";
+            : "|||";
 
         AddEntry(statement);
         return this;
