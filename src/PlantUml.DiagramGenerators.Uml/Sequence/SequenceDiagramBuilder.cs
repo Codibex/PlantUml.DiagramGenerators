@@ -24,9 +24,9 @@ public class SequenceDiagramBuilder
         return this;
     }
 
-    public SequenceDiagramBuilder AddParticipant(ParticipantBuilder participantBuilder)
+    public SequenceDiagramBuilder AddParticipant(ParticipantOptions participantOptions)
     {
-        _builder.AddParticipant(participantBuilder);
+        _builder.AddParticipant(participantOptions);
         return this;
     }
 

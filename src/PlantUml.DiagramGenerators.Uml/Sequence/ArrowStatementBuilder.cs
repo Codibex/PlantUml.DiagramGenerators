@@ -2,6 +2,10 @@
 
 internal class ArrowStatementBuilder : StatementBuilderBase<ArrowOptions>
 {
+    internal ArrowStatementBuilder() : base(new ArrowOptions())
+    {
+    }
+
     protected override string GetStatement()
     {
         string colorAndStyleText = GetColorAndStyleStatement();

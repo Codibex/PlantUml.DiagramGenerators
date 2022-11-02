@@ -10,7 +10,7 @@ public class SequenceDiagramBuilderAutoNumberTests
     {
         string uml = new SequenceDiagramBuilder()
             .AddAutoNumber()
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Authentication Request"))
             .AddSequence("Bob", "Alice", "Authentication Response")
             .Build();
 
@@ -28,20 +28,20 @@ Bob <- Alice : Authentication Response
     {
         string uml = new SequenceDiagramBuilder()
             .AddAutoNumber()
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Authentication Request"))
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddAutoNumber(config =>
             {
                 config.StartNumber = 15.ToString();
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Another authentication Request"))
             .AddSequence("Bob", "Alice", "Another authentication Response")
             .AddAutoNumber(config =>
             {
                 config.StartNumber = 40.ToString();
                 config.Increment = 10.ToString();
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .Build();
 
@@ -68,14 +68,14 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.Style = "<b>[000]";
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Authentication Request"))
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddAutoNumber(config =>
             {
                 config.StartNumber = 15.ToString();
                 config.Style = "<b>(<u>##</u>)";
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Another authentication Request"))
             .AddSequence("Bob", "Alice", "Another authentication Response")
             .AddAutoNumber(config =>
             {
@@ -83,7 +83,7 @@ Bob <- Alice : Yet another authentication Response
                 config.Increment = 10.ToString();
                 config.Style = "<font color=red><b>Message 0  ";
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .Build();
 
@@ -112,32 +112,32 @@ Bob <- Alice : Yet another authentication Response
                 config.Increment = 10.ToString();
                 config.Style = "<b>[000]";
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Authentication Request"))
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddAutoNumber(config =>
             {
                 config.AutoNumberBreak = AutoNumberBreak.Stop;
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
             .AddAutoNumber(config =>
             {
                 config.Style = "<font color=red><b>Message 0  ";
                 config.AutoNumberBreak = AutoNumberBreak.Resume;
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .AddAutoNumber(config =>
                 {
                     config.AutoNumberBreak = AutoNumberBreak.Stop;
                 })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "dummy", ignoreForAutomaticArrowDirectionDetection: true))
             .AddAutoNumber(config =>
             {
                 config.Increment = 1.ToString();
                 config.Style = "<font color=blue><b>Message 0  ";
                 config.AutoNumberBreak = AutoNumberBreak.Resume;
             })
-            .AddSequence(new SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Bob", "Alice", "Yet another authentication Request"))
             .AddSequence("Bob", "Alice", "Yet another authentication Response")
             .Build();
 
@@ -168,7 +168,7 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.StartNumber = "1.1.1";
             })
-            .AddSequence(new SequenceOptions("Alice", "Bob", "Authentication request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Alice", "Bob", "Authentication request"))
             .AddSequence("Bob", "Alice", "Response", config =>
             {
                 config.LineStyle = ArrowLineStyle.Dotted;
@@ -177,7 +177,7 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.Increment = "A";
             })
-            .AddSequence(new SequenceOptions("Alice", "Bob", "Another authentication request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Alice", "Bob", "Another authentication request"))
             .AddSequence("Bob", "Alice", "Response", config =>
             {
                 config.LineStyle = ArrowLineStyle.Dotted;
@@ -186,7 +186,7 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.Increment = "B";
             })
-            .AddSequence(new SequenceOptions("Alice", "Bob", "Another authentication request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Alice", "Bob", "Another authentication request"))
             .AddSequence("Bob", "Alice", "Response", config =>
             {
                 config.LineStyle = ArrowLineStyle.Dotted;
@@ -195,7 +195,7 @@ Bob <- Alice : Yet another authentication Response
             {
                 config.Increment = "A";
             })
-            .AddSequence(new SequenceOptions("Alice", "Bob", "Another authentication request"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Alice", "Bob", "Another authentication request"))
             .AddAutoNumber(config =>
             {
                 config.Increment = "B";
@@ -233,7 +233,7 @@ Bob --> Alice : Response
             {
                 config.StartNumber = 10.ToString();
             })
-            .AddSequence(new SequenceOptions("Alice", "Bob"))
+            .AddSequence(new Uml.Sequence.SequenceOptions("Alice", "Bob"))
             .AddNote(@"the <U+0025>autonumber<U+0025> works everywhere.
 Here, its value is ** %autonumber% **", NotePosition.Right)
             .AddSequence("Bob", "Alice", "//This is the response %autonumber%//", config =>

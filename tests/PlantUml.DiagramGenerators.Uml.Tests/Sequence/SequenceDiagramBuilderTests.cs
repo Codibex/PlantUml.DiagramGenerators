@@ -76,9 +76,9 @@ Foo -> Foo7 : To queue
     public void Build_Participant_WithColor()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(ParticipantBuilder.CreateActor("Bob").WithColor("#red"))
-            .AddParticipant(ParticipantBuilder.CreateParticipant("Alice"))
-            .AddParticipant(ParticipantBuilder.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
+            .AddParticipant(ParticipantOptions.CreateActor("Bob").WithColor("#red"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Alice"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("I have a really\\nlong name", "L").WithColor("#99FF99"))
             .AddSequence("Alice", "Bob", "Authentication Request")
             .AddSequence("Bob", "Alice", "Authentication Response")
             .AddSequence("Bob", "L", "Log transaction")
@@ -100,9 +100,9 @@ Bob -> L : Log transaction
     public void Build_Order()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(ParticipantBuilder.CreateParticipant("Last").WithOrder(30))
-            .AddParticipant(ParticipantBuilder.CreateParticipant("Middle").WithOrder(20))
-            .AddParticipant(ParticipantBuilder.CreateParticipant("First").WithOrder(10))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Last").WithOrder(30))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Middle").WithOrder(20))
+            .AddParticipant(ParticipantOptions.CreateParticipant("First").WithOrder(10))
             .Build();
 
         const string expected = @"@startuml
@@ -118,10 +118,10 @@ participant First order 10
     public void Build_Participant_Multiline()
     {
         string uml = new SequenceDiagramBuilder()
-            .AddParticipant(ParticipantBuilder.CreateParticipant("Participant").WithMultilineDeclaration(@"=Title
+            .AddParticipant(ParticipantOptions.CreateParticipant("Participant").WithMultilineDeclaration(@"=Title
 ----
 ""SubTitle"""))
-            .AddParticipant(ParticipantBuilder.CreateParticipant("Bob"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Bob"))
             .AddSequence("Participant", "Bob")
             .Build();
 

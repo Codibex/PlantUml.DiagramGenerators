@@ -1,7 +1,12 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-internal class AutoNumberBuilder : StatementBuilderBase<AutoNumberOptions>
+internal class AutoNumberStatementBuilder : StatementBuilderBase<AutoNumberOptions>
 {
+    internal AutoNumberStatementBuilder() :base(new AutoNumberOptions())
+    {
+        
+    }
+
     protected override string GetStatement()
     {
         string autoNumberBreak = GetAutoNumberBreak();

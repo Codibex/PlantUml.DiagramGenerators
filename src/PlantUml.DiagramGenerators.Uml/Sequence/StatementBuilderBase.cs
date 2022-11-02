@@ -1,9 +1,13 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
-internal abstract class StatementBuilderBase<TOptions> 
-    where TOptions : new()
+public abstract class StatementBuilderBase<TOptions> 
 {
-    protected TOptions Options { get; } = new();
+    protected TOptions Options { get; }
+
+    protected StatementBuilderBase(TOptions options)
+    {
+        Options = options;
+    }
 
     internal string Build(Action<TOptions>? config = null)
     {
