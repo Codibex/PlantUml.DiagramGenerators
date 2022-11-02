@@ -1,4 +1,6 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿using PlantUml.DiagramGenerators.Uml.State;
+
+namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class SequenceUmlBuilder : UmlBuilder
 {
@@ -204,6 +206,15 @@ public class SequenceUmlBuilder : UmlBuilder
             : "|||";
 
         AddEntry(statement);
+        return this;
+    }
+
+    public SequenceUmlBuilder AddBox(string title, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        var boxBuilder = new BoxUmlBuilder(NestingDepth);
+        string boxStatement = boxBuilder.AddBox(title, umlBuilderAction).Build();
+
+        AddEntry(boxStatement, true);
         return this;
     }
 }

@@ -27,4 +27,14 @@ public partial class SkinParameter
     {
         return new SkinParameter("style strictuml");
     }
+
+    public static SkinParameter ParticipantPadding(int padding)
+    {
+        return new SkinParameter($"ParticipantPadding {padding}");
+    }
+
+    public static SkinParameter BoxPadding(int padding)
+    {
+        return new SkinParameter($"BoxPadding {padding}");
+    }
 }

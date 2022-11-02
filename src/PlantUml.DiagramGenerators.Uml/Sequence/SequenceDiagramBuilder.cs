@@ -167,4 +167,10 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddSpace(space);
         return this;
     }
+
+    public SequenceDiagramBuilder AddBox(string title, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        UmlBuilder.AddBox(title, umlBuilderAction);
+        return this;
+    }
 }

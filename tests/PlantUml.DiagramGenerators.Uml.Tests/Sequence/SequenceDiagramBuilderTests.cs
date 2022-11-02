@@ -510,4 +510,52 @@ Bob --> Alice : ok
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Box()
+    {
+        var alice1 = ParticipantOptions.CreateParticipant("Alice1");
+        var alice2 = ParticipantOptions.CreateParticipant("Alice2");
+
+        var bob1 = ParticipantOptions.CreateParticipant("Bob1");
+        var bob2 = ParticipantOptions.CreateParticipant("Bob2");
+
+        var @out = ParticipantOptions.CreateParticipant("Out");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddBox("Foo1", builder =>
+            {
+                builder.AddParticipant(alice1)
+                    .AddParticipant(alice2);
+            })
+            .AddBox("Foo2", builder =>
+            {
+                builder.AddParticipant(bob1)
+                    .AddParticipant(bob2);
+            })
+            .AddSequence(alice1, bob1, "hello")
+            .AddSequence(alice1, @out, "out")
+            .Build(config =>
+            {
+                config.AddOptions(SkinParameter.ParticipantPadding(20),
+                    SkinParameter.BoxPadding(10));
+            });
+
+        const string expected = @"@startuml
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+box ""Foo1""
+	participant Alice1
+	participant Alice2
+end box
+box ""Foo2""
+	participant Bob1
+	participant Bob2
+end box
+Alice1 -> Bob1 : hello
+Alice1 -> Out : out
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
