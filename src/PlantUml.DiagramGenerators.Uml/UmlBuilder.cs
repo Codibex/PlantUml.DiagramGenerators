@@ -2,6 +2,9 @@
 
 namespace PlantUml.DiagramGenerators.Uml;
 
+/// <summary>
+/// Base class which provides base functionality to provide an uml part
+/// </summary>
 public abstract class UmlBuilder
 {
     protected int NestingDepth { get; }

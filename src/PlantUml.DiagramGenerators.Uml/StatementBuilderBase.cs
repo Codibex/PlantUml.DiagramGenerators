@@ -1,5 +1,9 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml;
 
+/// <summary>
+/// Base class for statement builder
+/// </summary>
+/// <typeparam name="TOptions">Builder options</typeparam>
 public abstract class StatementBuilderBase<TOptions>
 {
     protected TOptions Options { get; }

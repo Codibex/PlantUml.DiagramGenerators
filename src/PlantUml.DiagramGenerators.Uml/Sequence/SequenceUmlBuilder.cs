@@ -152,20 +152,9 @@ public class SequenceUmlBuilder : UmlBuilder
 
     public SequenceUmlBuilder AddLoop(int times, Action<SequenceUmlBuilder> umlBuilderAction)
     {
-        var loopBuilder = new SequenceUmlBuilder(NestingDepth + 1);
-        var loopBuildAction = (SequenceUmlBuilder lb) =>
-        {
-            var sequenceUmlBuilder = new SequenceUmlBuilder(NestingDepth);
-            umlBuilderAction.Invoke(sequenceUmlBuilder);
-            string statement = sequenceUmlBuilder.Build();
+        var loopBuilder = new LoopUmlBuilder(NestingDepth + 1); 
+        string loopStatement = loopBuilder.AddLoopBody(times, umlBuilderAction).Build();
 
-            lb.AddEntry($"loop {times} times");
-            lb.AddEntry(statement);
-            lb.AddEntry("end");
-        };
-
-        loopBuildAction.Invoke(loopBuilder);
-        string loopStatement = loopBuilder.Build();
         AddEntry(loopStatement, true);
         return this;
     }

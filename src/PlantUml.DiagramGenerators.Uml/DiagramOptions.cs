@@ -1,6 +1,9 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml;
 
-public class DiagramOptions
+/// <summary>
+/// Base diagram options
+/// </summary>
+public abstract class DiagramOptions
 {
     private List<string> Options { get; } = new();
 
