@@ -4,5 +4,6 @@ public enum NotePosition
 {
     Left,
     Right,
-    Over
+    Over,
+    Across
 }

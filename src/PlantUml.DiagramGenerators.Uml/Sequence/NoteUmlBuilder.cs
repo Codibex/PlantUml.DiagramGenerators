@@ -8,14 +8,42 @@ public class NoteUmlBuilder : UmlBuilder
 
     public NoteUmlBuilder AddNote(NoteOptions options)
     {
+        string alignedStatement = GetAlignedStatement(options);
+        string noteStartStatement = GetNoteStartStatement(options);
         string participantStatement = GetParticipantStatement(options);
         string positionStatement = GetPositionStatement(options);
         string colorStatement = GetColorStatement(options);
+        string noteEndStatement = GetNoteEndStatement(options);
 
-        AddEntry($"note {positionStatement}{participantStatement}{colorStatement}");
+        AddEntry($"{alignedStatement}{noteStartStatement} {positionStatement}{participantStatement}{colorStatement}");
         AddEntry(options.Note);
-        AddEntry("end note");
+        AddEntry(noteEndStatement);
         return this;
+    }
+
+    private static string GetAlignedStatement(NoteOptions options) =>
+        options.Aligned
+            ? "/ "
+            : string.Empty;
+
+    private static string GetNoteStartStatement(NoteOptions options) =>
+        options.Shape switch
+        {
+            NoteShape.Undefined => "note",
+            NoteShape.Rectangle => "rnote",
+            NoteShape.Hexagonal => "hnote",
+            _ => throw new ArgumentOutOfRangeException(nameof(options.Shape), options.Shape, null)
+        };
+
+    private static string GetNoteEndStatement(NoteOptions options)
+    {
+        return options.Shape switch
+        {
+            NoteShape.Undefined => "end note",
+            NoteShape.Rectangle => "endrnote",
+            NoteShape.Hexagonal => "endhnote",
+            _ => throw new ArgumentOutOfRangeException(nameof(options.Shape), options.Shape, null)
+        };
     }
 
     private static string GetParticipantStatement(NoteOptions options)
@@ -26,7 +54,9 @@ public class NoteUmlBuilder : UmlBuilder
             return string.Empty;
         }
 
-        string prefix = options.Position == NotePosition.Over ? string.Empty : " of";
+        string prefix = options.Position is NotePosition.Left or NotePosition.Right 
+            ? " of" 
+            : string.Empty;
         return  $"{prefix} {participants}";
     }
 
@@ -36,6 +66,7 @@ public class NoteUmlBuilder : UmlBuilder
             NotePosition.Left => "left",
             NotePosition.Right => "right",
             NotePosition.Over => "over",
+            NotePosition.Across => "across",
             _ => throw new ArgumentOutOfRangeException(nameof(options.Position), options.Position, null)
         };
 

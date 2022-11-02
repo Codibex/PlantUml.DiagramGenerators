@@ -91,4 +91,125 @@ end note
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Notes_Shape()
+    {
+        var caller = ParticipantOptions.CreateParticipant("caller");
+        var server = ParticipantOptions.CreateParticipant("server");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(caller.GetName(), server.GetName(), "conReq")
+            .AddNote(new NoteOptions("idle", NotePosition.Over).WithParticipant(caller)
+                .WithShape(NoteShape.Hexagonal))
+            .AddSequence(caller.GetName(), server.GetName(), "conConf")
+            .AddNote(new NoteOptions(@" """"r"""" as rectangle
+ """"h"""" as hexagon", NotePosition.Over)
+                .WithParticipant(server)
+                .WithShape(NoteShape.Rectangle))
+            .AddNote(new NoteOptions(@" this is
+ on several
+ lines", NotePosition.Over)
+                .WithParticipant(server)
+                .WithShape(NoteShape.Rectangle))
+            .AddNote(new NoteOptions(@" this is
+ on several
+ lines", NotePosition.Over)
+                .WithParticipant(caller)
+                .WithShape(NoteShape.Hexagonal))
+            .Build();
+
+        const string expected = @"@startuml
+caller -> server : conReq
+hnote over caller
+idle
+endhnote
+caller <- server : conConf
+rnote over server
+ """"r"""" as rectangle
+ """"h"""" as hexagon
+endrnote
+rnote over server
+ this is
+ on several
+ lines
+endrnote
+hnote over caller
+ this is
+ on several
+ lines
+endhnote
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Notes_Across()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateParticipant("Bob");
+        var charlie = ParticipantOptions.CreateParticipant("Charlie");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(alice.GetName(), bob.GetName(), "m1")
+            .AddSequence(bob.GetName(), charlie.GetName(), "m2")
+            .AddNote(new NoteOptions(@"Old method for note over all part. with:
+""""note over //FirstPart, LastPart//"""".", NotePosition.Over)
+                .WithParticipant(alice)
+                .WithParticipant(charlie))
+            .AddNote(new NoteOptions(@"New method with:
+""""note across""""", NotePosition.Across))
+            .AddSequence(bob.GetName(), alice.GetName())
+            .AddNote(new NoteOptions(@"Note across all part.", NotePosition.Across)
+                .WithShape(NoteShape.Hexagonal))
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : m1
+Bob -> Charlie : m2
+note over Alice, Charlie
+Old method for note over all part. with:
+""""note over //FirstPart, LastPart//"""".
+end note
+note across
+New method with:
+""""note across""""
+end note
+Bob -> Alice
+hnote across
+Note across all part.
+endhnote
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Notes_Aligned()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateParticipant("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddNote(new NoteOptions(@"initial state of Alice", NotePosition.Over)
+                .WithParticipant(alice))
+            .AddNote(new NoteOptions(@"initial state of Bob", NotePosition.Over)
+                .WithParticipant(bob)
+                .WithAlignment())
+            .AddSequence(bob.GetName(), alice.GetName(), "hello")
+            .Build();
+
+        const string expected = @"@startuml
+note over Alice
+initial state of Alice
+end note
+/ note over Bob
+initial state of Bob
+end note
+Bob -> Alice : hello
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
