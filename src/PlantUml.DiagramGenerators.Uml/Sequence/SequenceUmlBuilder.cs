@@ -183,4 +183,24 @@ public class SequenceUmlBuilder : UmlBuilder
         AddEntry(new ReferenceStatementBuilder(NestingDepth).AddReference(referenceDescription, participants).Build());
         return this;
     }
+
+    public SequenceUmlBuilder AddDelay(string? delayMessage = null)
+    {
+        string statement = string.IsNullOrWhiteSpace(delayMessage)
+            ? "..."
+            : $"...{delayMessage}...";
+
+        AddEntry(statement);
+        return this;
+    }
+
+    public SequenceUmlBuilder AddSpace(int? space = null)
+    {
+        string statement = space.HasValue
+            ? $"||{space}||"
+            : $"|||";
+
+        AddEntry(statement);
+        return this;
+    }
 }

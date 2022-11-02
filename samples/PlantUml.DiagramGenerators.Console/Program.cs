@@ -35,3 +35,4 @@ await RenderFile(renderer, StateImageBuilder.CreateUmlFork(), "uml_state_fork");
 await RenderFile(renderer, SequenceImageBuilder.CreateUmlSequenceWithColor(), "uml_sequence_with_color");
 await RenderFile(renderer, SequenceImageBuilder.CreateSplittingDiagrams(), "uml_sequence_page_split");
 await RenderFile(renderer, SequenceImageBuilder.CreateGroupingMessage(), "uml_sequence_grouping_message");
+await RenderFile(renderer, SequenceImageBuilder.CreateReference(), "uml_sequence_reference");

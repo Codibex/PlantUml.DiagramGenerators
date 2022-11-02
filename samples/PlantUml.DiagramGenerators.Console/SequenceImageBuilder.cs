@@ -60,4 +60,19 @@ internal static class SequenceImageBuilder
             })
             .Build();
     }
+
+    internal static string CreateReference()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateActor("Bob");
+
+        return new SequenceDiagramBuilder()
+            .AddParticipant(alice)
+            .AddParticipant(bob)
+            .AddReference("init", alice, bob)
+            .AddSequence(alice, bob, "hello")
+            .AddReference(@"This can be on
+several lines", bob)
+            .Build();
+    }
 }

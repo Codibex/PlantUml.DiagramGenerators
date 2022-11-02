@@ -438,4 +438,75 @@ end ref
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Delay()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateActor("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(alice, bob, "Authentication Request")
+            .AddDelay()
+            .AddSequence(bob, alice, "Authentication Response", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .AddDelay("5 minutes later")
+            .AddSequence(bob, alice, "Good Bye !", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : Authentication Request
+...
+Bob --> Alice : Authentication Response
+...5 minutes later...
+Bob --> Alice : Good Bye !
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Spacing()
+    {
+        var alice = ParticipantOptions.CreateParticipant("Alice");
+        var bob = ParticipantOptions.CreateActor("Bob");
+
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(alice, bob, "message 1")
+            .AddSequence(bob, alice, "ok", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .AddSpace()
+            .AddSequence(alice, bob, "message 2")
+            .AddSequence(bob, alice, "ok", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .AddSpace(45)
+            .AddSequence(alice, bob, "message 3")
+            .AddSequence(bob, alice, "ok", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : message 1
+Bob --> Alice : ok
+|||
+Alice -> Bob : message 2
+Bob --> Alice : ok
+||45||
+Alice -> Bob : message 3
+Bob --> Alice : ok
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
