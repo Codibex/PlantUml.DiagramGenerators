@@ -121,7 +121,7 @@ string CreateUmlSequenceWithColor()
         .Build();
 }
 
-string BuildSplittingDiagrams()
+string CreateSplittingDiagrams()
 {
     return new SequenceDiagramBuilder()
         .AddSequence(new SequenceOptions("Alice", "Bob", "message 1"))
@@ -132,6 +132,37 @@ string BuildSplittingDiagrams()
         .AddNewPage("A title for the\\nlast page")
         .AddSequence(new SequenceOptions("Alice", "Bob", "message 5", ignoreAutomaticArrowDirectionDetection: true))
         .AddSequence(new SequenceOptions("Alice", "Bob", "message 6", ignoreAutomaticArrowDirectionDetection: true))
+        .Build();
+}
+
+string CreateGroupingMessage()
+{
+    return new SequenceDiagramBuilder()
+        .AddSequence(new SequenceOptions("Alice", "Bob", "Authentication Request"))
+        .AddMessageGroup(gb =>
+        {
+            gb.AddAlt("successful case",
+                    builder => { builder.AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Accepted")); })
+                .AddElse("some kind of failure", builder =>
+                {
+                    builder.AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Failure"));
+                    builder.AddGroup("My own label", subBuilder =>
+                    {
+                        subBuilder
+                            .AddSequence(new SequenceOptions("Alice", "Log", "Log attack start"))
+                            .AddLoop(1000,
+                                subSubBuilder =>
+                                {
+                                    subSubBuilder.AddSequence(new SequenceOptions("Alice", "Bob", "DNS Attack"));
+                                })
+                            .AddSequence(new SequenceOptions("Alice", "Log", "Log attack end",
+                                ignoreAutomaticArrowDirectionDetection: true));
+                    });
+                })
+                .AddElse("Another type of failure",
+                    builder => { builder.AddSequence(new SequenceOptions("Bob", "Alice", "Please repeat")); })
+                .AddEnd();
+        })
         .Build();
 }
 
@@ -146,11 +177,12 @@ var renderer = factory.CreateRenderer(new PlantUmlSettings());
 
 // State
 await RenderFile(renderer, CreatePngFromJson(), "json");
-await RenderFile(renderer, CreateUmlCompositeState(), "uml_composite_state");
-await RenderFile(renderer, CreateUmlSubStateToSubState(), "uml_subState_to_subState");
-await RenderFile(renderer, CreateUmlLongName(), "uml_long_name");
-await RenderFile(renderer, CreateUmlFork(), "uml_fork");
+await RenderFile(renderer, CreateUmlCompositeState(), "uml_state_composite_state");
+await RenderFile(renderer, CreateUmlSubStateToSubState(), "uml_state_subState_to_subState");
+await RenderFile(renderer, CreateUmlLongName(), "uml_state_long_name");
+await RenderFile(renderer, CreateUmlFork(), "uml_state_fork");
 
 //Sequence
 await RenderFile(renderer, CreateUmlSequenceWithColor(), "uml_sequence_with_color");
-await RenderFile(renderer, BuildSplittingDiagrams(), "uml_sequence_page_split");
+await RenderFile(renderer, CreateSplittingDiagrams(), "uml_sequence_page_split");
+await RenderFile(renderer, CreateGroupingMessage(), "uml_sequence_grouping_message");
