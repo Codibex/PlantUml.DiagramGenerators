@@ -5,7 +5,7 @@
 /// </summary>
 /// <remarks>
 /// For details look at https://plantuml.com/en/skinparam
-/// Or look at https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
+/// or look at https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
 /// </remarks>
 public partial class SkinParameter
 {
