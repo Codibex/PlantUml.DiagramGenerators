@@ -1,6 +1,6 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿namespace PlantUml.DiagramGenerators.Uml;
 
-public abstract class StatementBuilderBase<TOptions> 
+public abstract class StatementBuilderBase<TOptions>
 {
     protected TOptions Options { get; }
 
@@ -12,7 +12,15 @@ public abstract class StatementBuilderBase<TOptions>
     internal string Build(Action<TOptions>? config = null)
     {
         config?.Invoke(Options);
+        
+        CheckOptions();
+        
         return GetStatement();
+    }
+
+    protected virtual void CheckOptions()
+    {
+        
     }
 
     protected abstract string GetStatement();

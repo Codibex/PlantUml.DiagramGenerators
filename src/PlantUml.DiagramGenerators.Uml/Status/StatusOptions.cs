@@ -25,7 +25,7 @@ public class StatusOptions
     /// </summary>
     public StatusType Type { get; init; }
 
-    public bool AddStateStatement { get; internal set; } = true;
+    public bool AddStateStatement { get; internal set; } = false;
 
     public StatusNoteOptions? NoteOptions { get; init; }
     public string? Color { get; init; }

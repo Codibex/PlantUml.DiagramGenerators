@@ -82,10 +82,7 @@ string CreateUmlLongName()
         .AddFinalTransition("State3", "Aborted")
         .Build(options =>
         {
-            options.AdditionalOptions = new[]
-            {
-                "scale 600 width"
-            };
+            options.AddOptions("scale 600 width");
         });
 }
 

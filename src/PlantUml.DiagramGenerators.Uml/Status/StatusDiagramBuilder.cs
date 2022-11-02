@@ -2,85 +2,72 @@
 
 namespace PlantUml.DiagramGenerators.Uml.Status;
 
-public class StatusDiagramBuilder
+public class StatusDiagramBuilder : UmlDiagramBuilderBase<StatusTransitionUmlBuilder, StatusDiagramOptions>
 {
-    private readonly StatusTransitionBuilder _builder = new(0);
-
-    public StatusDiagramBuilder AddStartTransition(string statusName, string? description = null, ArrowOptions? arrowOptions = null)
+    public StatusDiagramBuilder() : base(new StatusTransitionUmlBuilder(0), StatusDiagramOptions.Default)
     {
-        _builder.AddStartTransition(statusName, description, arrowOptions);
+        
+    }
+
+    public StatusDiagramBuilder AddStartTransition(string statusName, string? description = null, Action<ArrowOptions>? arrowConfig = null)
+    {
+        UmlBuilder.AddStartTransition(statusName, description, arrowConfig);
         return this;
     }
 
-    public StatusDiagramBuilder AddStartTransition(StatusOptions statusOptions, string? description = null, ArrowOptions? arrowOptions = null)
+    public StatusDiagramBuilder AddStartTransition(StatusOptions statusOptions, string? description = null, Action<ArrowOptions>? arrowConfig = null)
     {
-        _builder.AddStartTransition(statusOptions, description, arrowOptions);
+        UmlBuilder.AddStartTransition(statusOptions, description, arrowConfig);
         return this;
     }
 
-    public StatusDiagramBuilder AddStatusTransition(string sourceStatusName, string targetStatusName, string? description = null, ArrowOptions? arrowOptions = null, TransitionNoteOptions? noteOptions = null)
+    public StatusDiagramBuilder AddStatusTransition(string sourceStatusName, string targetStatusName, string? description = null, Action<ArrowOptions>? arrowConfig = null, TransitionNoteOptions? noteOptions = null)
     {
-        _builder.AddStatusTransition(sourceStatusName, targetStatusName, description, arrowOptions, noteOptions);
+        UmlBuilder.AddStatusTransition(sourceStatusName, targetStatusName, description, arrowConfig, noteOptions);
         return this;
     }
 
-    public StatusDiagramBuilder AddStatusTransition(StatusOptions sourceStatusOptions, StatusOptions targetStatusOptions, string? description = null, ArrowOptions? arrowOptions = null, TransitionNoteOptions? noteOptions = null)
+    public StatusDiagramBuilder AddStatusTransition(StatusOptions sourceStatusOptions, StatusOptions targetStatusOptions, string? description = null, Action<ArrowOptions>? arrowConfig = null, TransitionNoteOptions? noteOptions = null)
     {
-        _builder.AddStatusTransition(sourceStatusOptions, targetStatusOptions, description, arrowOptions, noteOptions);
+        UmlBuilder.AddStatusTransition(sourceStatusOptions, targetStatusOptions, description, arrowConfig, noteOptions);
         return this;
     }
 
-    public StatusDiagramBuilder AddFinalTransition(string statusName, string? description = null, ArrowOptions? arrowOptions = null)
+    public StatusDiagramBuilder AddFinalTransition(string statusName, string? description = null, Action<ArrowOptions>? arrowConfig = null)
     {
-        _builder.AddFinalTransition(statusName, description, arrowOptions);
+        UmlBuilder.AddFinalTransition(statusName, description, arrowConfig);
         return this;
     }
 
-    public StatusDiagramBuilder AddSubStatus(string statusName, Action<StatusTransitionBuilder> subStatusBuildAction)
+    public StatusDiagramBuilder AddSubStatus(string statusName, Action<StatusTransitionUmlBuilder> subStatusBuildAction)
     {
-        _builder.AddSubStatus(statusName, subStatusBuildAction);
+        UmlBuilder.AddSubStatus(statusName, subStatusBuildAction);
         return this;
     }
 
-    public StatusDiagramBuilder AddSubStatus(StatusOptions statusOptions, Action<StatusTransitionBuilder> subStatusBuildAction)
+    public StatusDiagramBuilder AddSubStatus(StatusOptions statusOptions, Action<StatusTransitionUmlBuilder> subStatusBuildAction)
     {
-        _builder.AddSubStatus(statusOptions, subStatusBuildAction);
+        UmlBuilder.AddSubStatus(statusOptions, subStatusBuildAction);
         return this;
     }
 
     public StatusDiagramBuilder AddStatus(StatusOptions options)
     {
-        _builder.AddStatus(options);
+        UmlBuilder.AddStatus(options);
         return this;
     }
 
     public StatusDiagramBuilder AddNote(NoteOptions noteOptions)
     {
-        _builder.AddNote(noteOptions);
+        UmlBuilder.AddNote(noteOptions);
         return this;
     }
-
-    public string Build(Action<StatusDiagramOptions>? options = null)
+    
+    protected override void AddDiagramSpecificOptionsStatements(StringBuilder stringBuilder)
     {
-        var currentOptions = StatusDiagramOptions.Default;
-        options?.Invoke(currentOptions);
-
-        var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine(UmlConstants.START_TAG);
-
-        if (currentOptions.HideEmptyDescriptionTag)
+        if (Options.HideEmptyDescriptionTag)
         {
             stringBuilder.AppendLine(UmlConstants.HIDE_EMPTY_DESCRIPTION_TAG);
         }
-
-        foreach (string additionalOption in currentOptions.AdditionalOptions)
-        {
-            stringBuilder.AppendLine(additionalOption);
-        }
-
-        stringBuilder.AppendLine(_builder.Build());
-        stringBuilder.AppendLine(UmlConstants.END_TAG);
-
-        return stringBuilder.ToString().TrimEnd();
     }
 }

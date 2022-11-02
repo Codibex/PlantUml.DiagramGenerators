@@ -9,16 +9,16 @@ internal class SequenceStatementBuilder
         _sequenceOptions = sequenceOptions;
     }
 
-    internal string Build(SequenceBuilder sequenceBuilder, Action<ArrowOptions>? arrowConfig)
+    internal string Build(SequenceUmlBuilder sequenceUmlBuilder, Action<ArrowOptions>? arrowConfig)
     {
         var sourceToTargetSequence = $"{_sequenceOptions.SourceParticipant}_{_sequenceOptions.TargetParticipant}";
         var targetToSourceSequence = $"{_sequenceOptions.TargetParticipant}_{_sequenceOptions.SourceParticipant}";
         if (_sequenceOptions.IgnoreForAutomaticArrowDirectionDetection == false)
         {
-            if (sequenceBuilder.SequenceKeys.Contains(sourceToTargetSequence) == false &&
-                sequenceBuilder.SequenceKeys.Contains(targetToSourceSequence) == false)
+            if (sequenceUmlBuilder.SequenceKeys.Contains(sourceToTargetSequence) == false &&
+                sequenceUmlBuilder.SequenceKeys.Contains(targetToSourceSequence) == false)
             {
-                sequenceBuilder.AddSequenceKey(sourceToTargetSequence);
+                sequenceUmlBuilder.AddSequenceKey(sourceToTargetSequence);
                 arrowConfig += options =>
                 {
                     options.Direction = ArrowDirection.SourceToTarget;
@@ -26,21 +26,21 @@ internal class SequenceStatementBuilder
             }
             else
             {
-                bool sourceCountExists = sequenceBuilder.SequenceKeys.Count(s => s.Equals(sourceToTargetSequence)) > 0;
+                bool sourceCountExists = sequenceUmlBuilder.SequenceKeys.Count(s => s.Equals(sourceToTargetSequence)) > 0;
 
                 if (sourceCountExists)
                 {
-                    sequenceBuilder.AddSequenceKey(sourceToTargetSequence);
+                    sequenceUmlBuilder.AddSequenceKey(sourceToTargetSequence);
                     arrowConfig += options =>
                     {
-                        options.Direction = sequenceBuilder.SequenceKeys.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
+                        options.Direction = sequenceUmlBuilder.SequenceKeys.Count(s => s.Equals(sourceToTargetSequence)) % 2 == 0
                             ? ArrowDirection.TargetToSource
                             : ArrowDirection.SourceToTarget;
                     };
                 }
                 else
                 {
-                    sequenceBuilder.AddSequenceKey(targetToSourceSequence);
+                    sequenceUmlBuilder.AddSequenceKey(targetToSourceSequence);
                 }
             }
         }

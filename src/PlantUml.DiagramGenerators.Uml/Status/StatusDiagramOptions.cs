@@ -3,16 +3,14 @@
 /// <summary>
 /// Diagram options
 /// </summary>
-public class StatusDiagramOptions
+public class StatusDiagramOptions : DiagramOptions
 {
-    public static StatusDiagramOptions Default => new(true, Array.Empty<string>());
+    public static StatusDiagramOptions Default => new(true);
 
     public bool HideEmptyDescriptionTag { get; set; }
-    public string[] AdditionalOptions { get; set; }
 
-    private StatusDiagramOptions(bool hideEmptyDescriptionTag, params string[] additionalOptions)
+    private StatusDiagramOptions(bool hideEmptyDescriptionTag)
     {
         HideEmptyDescriptionTag = hideEmptyDescriptionTag;
-        AdditionalOptions = additionalOptions;
     }
 }

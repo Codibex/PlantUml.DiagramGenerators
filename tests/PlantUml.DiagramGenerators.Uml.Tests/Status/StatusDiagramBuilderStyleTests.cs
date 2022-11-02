@@ -8,18 +8,18 @@ public class StatusDiagramBuilderStyleTests
     public void Build_Arrow_Direction()
     {
         string uml = new StatusDiagramBuilder()
-            .AddStartTransition("First", arrowOptions: new ArrowOptions
+            .AddStartTransition("First", arrowConfig: config =>
             {
-                Direction = ArrowDirection.Up
+                config.Direction = ArrowDirection.Up;
             })
-            .AddStatusTransition("First", "Second", arrowOptions: new ArrowOptions
+            .AddStatusTransition("First", "Second", arrowConfig: config =>
             {
-                Direction = ArrowDirection.Right
+                config.Direction = ArrowDirection.Right;
             })
             .AddStatusTransition("Second", "Third")
-            .AddStatusTransition("Third", "Last", arrowOptions: new ArrowOptions
+            .AddStatusTransition("Third", "Last", arrowConfig: config =>
             {
-                Direction = ArrowDirection.Left
+                config.Direction = ArrowDirection.Left;
             })
             .Build();
 
@@ -40,36 +40,36 @@ Third -left-> Last
         string uml = new StatusDiagramBuilder()
             .AddStatus(new StatusOptions("S1"))
             .AddStatus(new StatusOptions("S2"))
-            .AddStatusTransition("S1", "S2", arrowOptions: new ArrowOptions
+            .AddStatusTransition("S1", "S2", arrowConfig: config =>
             {
-                Color = "#DD00AA"
+                config.Color = "#DD00AA";
             })
-            .AddStatusTransition("S1", "S3", arrowOptions: new ArrowOptions
+            .AddStatusTransition("S1", "S3", arrowConfig: config =>
             {
-                Color = "#yellow"
+                config.Color = "#yellow";
             })
-            .AddStatusTransition("S1", "S4", arrowOptions: new ArrowOptions
+            .AddStatusTransition("S1", "S4", arrowConfig: config =>
             {
-                Color = "#red",
-                Style = "dashed"
+                config.Color = "#red";
+                config.Style = "dashed";
             })
-            .AddStatusTransition("S1", "S5", arrowOptions: new ArrowOptions
+            .AddStatusTransition("S1", "S5", arrowConfig: config =>
             {
-                Color = "#blue",
-                Style = "dotted"
+                config.Color = "#blue";
+                config.Style = "dotted";
             })
-            .AddStatusTransition("X1", "X2", arrowOptions: new ArrowOptions
+            .AddStatusTransition("X1", "X2", arrowConfig: config =>
             {
-                Style = "dashed"
+                config.Style = "dashed";
             })
-            .AddStatusTransition("Z1", "Z2", arrowOptions: new ArrowOptions
+            .AddStatusTransition("Z1", "Z2", arrowConfig: config =>
             {
-                Style = "dotted"
+                config.Style = "dotted";
             })
-            .AddStatusTransition("Y1", "Y2", arrowOptions: new ArrowOptions
+            .AddStatusTransition("Y1", "Y2", arrowConfig: config =>
             {
-                Color = "#blue",
-                Style = "bold"
+                config.Color = "#blue";
+                config.Style = "bold";
             })
             .Build();
 
@@ -107,20 +107,20 @@ Y1 -[#blue,bold]-> Y2
                     {
                         Color = "#brown"
                     })
-                        .AddStatusTransition("Site", "Controller", arrowOptions: new ArrowOptions
+                        .AddStatusTransition("Site", "Controller", arrowConfig: config =>
                         {
-                            Style = "hidden"
+                            config.Style = "hidden";
                         })
-                        .AddStatusTransition("Controller", "Devices", arrowOptions: new ArrowOptions
+                        .AddStatusTransition("Controller", "Devices", arrowConfig: config =>
                         {
-                            Style = "hidden"
+                            config.Style = "hidden";
                         });
                 })
                     .AddSubStatus(new StatusOptions("PresentationSetup"), sb =>
                     {
-                        sb.AddStatusTransition("Groups", "PlansAndGraphics", arrowOptions: new ArrowOptions
+                        sb.AddStatusTransition("Groups", "PlansAndGraphics", arrowConfig: config =>
                         {
-                            Style = "hidden"
+                            config.Style = "hidden";
                         });
                     })
                     .AddStatus(new StatusOptions("Trends")

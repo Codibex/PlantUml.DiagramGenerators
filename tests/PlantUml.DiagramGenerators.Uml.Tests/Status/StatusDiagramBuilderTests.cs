@@ -9,19 +9,10 @@ public class StatusDiagramBuilderTests
     public void Build_SimpleStatus()
     {
         var builder = new StatusDiagramBuilder();
-        string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-        {
-            Length = 3
-        })
+        string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
             .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 1
-            })
-            .AddFinalTransition("Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 6
-            })
+            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
+            .AddFinalTransition("Completed", arrowConfig: config => { config.Length = 6; })
             .Build();
 
         const string expected = @"@startuml
@@ -39,25 +30,16 @@ Completed ------> [*]
     public void Build_With_SubStatus()
     {
         var builder = new StatusDiagramBuilder();
-        string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-        {
-            Length = 3
-        })
+        string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
             .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 1
-            })
+            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
             .AddSubStatus("InProgress", b =>
             {
                 b.AddStartTransition("State1")
                     .AddStatusTransition("State1", "State2")
                     .AddFinalTransition("State2");
             })
-            .AddFinalTransition("Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 6
-            })
+            .AddFinalTransition("Completed", arrowConfig: config => { config.Length = 6; })
             .Build();
 
         const string expected = @"@startuml
@@ -80,15 +62,9 @@ Completed ------> [*]
     public void Build_With_SubStatus_In_SubStatus()
     {
         var builder = new StatusDiagramBuilder();
-        string uml = builder.AddStartTransition("New", arrowOptions: new ArrowOptions
-        {
-            Length = 3
-        })
+        string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
             .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 1
-            })
+            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
             .AddSubStatus("InProgress", b =>
             {
                 b.AddStartTransition("State1")
@@ -101,10 +77,7 @@ Completed ------> [*]
                     })
                     .AddFinalTransition("State2");
             })
-            .AddFinalTransition("Completed", arrowOptions: new ArrowOptions
-            {
-                Length = 6
-            })
+            .AddFinalTransition("Completed", arrowConfig: config => { config.Length = 6; })
             .Build();
 
         const string expected = @"@startuml
@@ -152,10 +125,7 @@ Completed ------> [*]
             .Build(options =>
             {
                 options.HideEmptyDescriptionTag = false;
-                options.AdditionalOptions = new[]
-                {
-                    "scale 350 width"
-                };
+                options.AddOptions("scale 350 width");
             });
 
         const string expected = @"@startuml
@@ -245,10 +215,7 @@ Z --> Y
             .AddFinalTransition("State3", "Aborted")
             .Build(options =>
             {
-                options.AdditionalOptions = new[]
-                {
-                    "scale 600 width"
-                };
+                options.AddOptions("scale 600 width");
             });
 
         const string expected = @"@startuml

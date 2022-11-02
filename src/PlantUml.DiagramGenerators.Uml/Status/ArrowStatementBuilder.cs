@@ -1,36 +1,33 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Status;
 
-internal class ArrowBuilder
+internal class ArrowStatementBuilder : StatementBuilderBase<ArrowOptions>
 {
-    private readonly ArrowOptions _options;
-
-    public ArrowBuilder(ArrowOptions options)
+    public ArrowStatementBuilder() : base(new ArrowOptions())
     {
-        _options = options;
     }
 
-    public string Build()
+    protected override string GetStatement()
     {
         string arrowDirectionText = GetArrowDirectionStatement();
         string colorAndStyleText = GetColorAndStyleStatement();
-        return $"-{arrowDirectionText}{colorAndStyleText}{string.Join("", Enumerable.Range(0, _options.Length - 1).Select(_ => "-"))}>";
+        return $"-{arrowDirectionText}{colorAndStyleText}{string.Join("", Enumerable.Range(0, Options.Length - 1).Select(_ => "-"))}>";
     }
 
     private string GetArrowDirectionStatement()
-        => _options.Direction switch
+        => Options.Direction switch
         {
             ArrowDirection.Down => "down",
             ArrowDirection.Right => "right",
             ArrowDirection.Left => "left",
             ArrowDirection.Up => "up",
             null => string.Empty,
-            _ => throw new ArgumentOutOfRangeException(nameof(_options.Direction), _options.Direction, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(Options.Direction), Options.Direction, null)
         };
 
     private string GetColorAndStyleStatement()
     {
-        bool colorSet = string.IsNullOrWhiteSpace(_options.Color) == false;
-        bool styleSet = string.IsNullOrWhiteSpace(_options.Style) == false;
+        bool colorSet = string.IsNullOrWhiteSpace(Options.Color) == false;
+        bool styleSet = string.IsNullOrWhiteSpace(Options.Style) == false;
 
         if (colorSet == false && styleSet == false)
         {
@@ -40,7 +37,7 @@ internal class ArrowBuilder
         var statement = "[";
         if (colorSet)
         {
-            statement += _options.Color;
+            statement += Options.Color;
         }
 
         if (styleSet == false)
@@ -50,11 +47,11 @@ internal class ArrowBuilder
 
         if (colorSet)
         {
-            statement += $",{_options.Style}";
+            statement += $",{Options.Style}";
         }
         else
         {
-            statement += $"{_options.Style}";
+            statement += $"{Options.Style}";
         }
 
         return $"{statement}]";

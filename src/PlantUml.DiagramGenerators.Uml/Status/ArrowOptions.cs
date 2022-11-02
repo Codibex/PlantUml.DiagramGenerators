@@ -2,8 +2,8 @@
 
 public class ArrowOptions
 {
-    public byte Length { get; init; } = 2;
-    public ArrowDirection? Direction { get; init; }
-    public string? Color { get; init; }
-    public string? Style { get; init; }
+    public byte Length { get; set; } = 2;
+    public ArrowDirection? Direction { get; set; }
+    public string? Color { get; set; }
+    public string? Style { get; set; }
 }

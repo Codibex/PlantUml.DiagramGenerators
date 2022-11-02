@@ -102,10 +102,7 @@ end note
             .Build(options =>
             {
                 options.HideEmptyDescriptionTag = false;
-                options.AdditionalOptions = new[]
-                {
-                    "scale 350 width"
-                };
+                options.AddOptions("scale 350 width");
             });
 
         const string expected = @"@startuml
