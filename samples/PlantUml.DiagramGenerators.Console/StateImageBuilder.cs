@@ -42,7 +42,8 @@ internal static class StateImageBuilder
             .AddStateTransition("Z", "Y")
             .Build(options =>
             {
-                options.HideEmptyDescriptionTag = false;
+                options.HideEmptyDescriptionTag.IsActive = false;
+                options.AddOptions("skinparam lifelineStrategy solid");
             });
     }
 

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using PlantUml.DiagramGenerators.Uml.Options;
 using PlantUml.DiagramGenerators.Uml.Sequence;
 
 namespace PlantUml.DiagramGenerators.Uml.Tests.Sequence;

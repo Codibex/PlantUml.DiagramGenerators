@@ -62,12 +62,4 @@ public class StateDiagramBuilder : UmlDiagramBuilderBase<StateTransitionUmlBuild
         UmlBuilder.AddNote(noteOptions);
         return this;
     }
-    
-    protected override void AddDiagramSpecificOptionsStatements(StringBuilder stringBuilder)
-    {
-        if (Options.HideEmptyDescriptionTag)
-        {
-            stringBuilder.AppendLine(UmlConstants.HIDE_EMPTY_DESCRIPTION_TAG);
-        }
-    }
 }

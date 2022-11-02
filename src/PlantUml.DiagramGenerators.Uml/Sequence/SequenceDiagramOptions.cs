@@ -1,10 +1,10 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿using PlantUml.DiagramGenerators.Uml.Options;
+
+namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class SequenceDiagramOptions : DiagramOptions
 {
     public static SequenceDiagramOptions Default => new();
 
-    private SequenceDiagramOptions()
-    {
-    }
+    public DiagramOption HideUnlinkedParticipant { get; } = DiagramOption.HideUnlinkedParticipant();
 }

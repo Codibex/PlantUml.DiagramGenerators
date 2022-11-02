@@ -1,16 +1,16 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.State;
+﻿using PlantUml.DiagramGenerators.Uml.Options;
+
+namespace PlantUml.DiagramGenerators.Uml.State;
 
 /// <summary>
 /// Diagram options
 /// </summary>
 public class StateDiagramOptions : DiagramOptions
 {
-    public static StateDiagramOptions Default => new(true);
-
-    public bool HideEmptyDescriptionTag { get; set; }
-
-    private StateDiagramOptions(bool hideEmptyDescriptionTag)
+    public static StateDiagramOptions Default => new()
     {
-        HideEmptyDescriptionTag = hideEmptyDescriptionTag;
-    }
+        HideEmptyDescriptionTag = { IsActive = true }
+    };
+
+    public DiagramOption HideEmptyDescriptionTag { get; } = DiagramOption.HideEmptyDescriptionTag;
 }

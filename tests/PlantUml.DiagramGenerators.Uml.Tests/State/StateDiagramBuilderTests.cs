@@ -124,7 +124,7 @@ Completed ------> [*]
             })
             .Build(options =>
             {
-                options.HideEmptyDescriptionTag = false;
+                options.HideEmptyDescriptionTag.IsActive = false;
                 options.AddOptions("scale 350 width");
             });
 
@@ -166,7 +166,7 @@ state Configuring {
             .AddStateTransition("Z", "Y")
             .Build(options =>
             {
-                options.HideEmptyDescriptionTag = false;
+                options.HideEmptyDescriptionTag.IsActive = false;
             });
 
         const string expected = @"@startuml
@@ -592,7 +592,7 @@ Foo1 --> entry2
             .AddStateTransition("alias3", "alias4")
             .Build(options =>
             {
-                options.HideEmptyDescriptionTag = false;
+                options.HideEmptyDescriptionTag.IsActive = false;
             });
 
         const string expected = @"@startuml

@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Options;
 public partial class SkinParameter
 {
     public static SkinParameter SequenceMessageAlignment(SequenceMessageAlignment messageAlignment)
@@ -16,5 +16,15 @@ public partial class SkinParameter
     public static SkinParameter ResponseMessageBelowArrow(bool value)
     {
         return new SkinParameter($"responseMessageBelowArrow {value.ToString().ToLower()}");
+    }
+
+    public static SkinParameter StrictUml()
+    {
+        return new SkinParameter("style strictuml");
+    }
+
+    public static SkinParameter HideUnlinked()
+    {
+        return new SkinParameter("style strictuml");
     }
 }

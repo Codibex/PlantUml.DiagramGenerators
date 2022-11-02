@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿namespace PlantUml.DiagramGenerators.Uml.Options;
 
 /// <summary>
 /// Builtin skin parameters

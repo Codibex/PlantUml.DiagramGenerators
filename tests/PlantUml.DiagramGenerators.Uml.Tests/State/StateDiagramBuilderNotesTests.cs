@@ -101,7 +101,7 @@ end note
             })
             .Build(options =>
             {
-                options.HideEmptyDescriptionTag = false;
+                options.HideEmptyDescriptionTag.IsActive = false;
                 options.AddOptions("scale 350 width");
             });
 

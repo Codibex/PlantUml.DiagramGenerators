@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using PlantUml.DiagramGenerators.Uml.Options;
 
 namespace PlantUml.DiagramGenerators.Uml;
 
@@ -31,6 +32,7 @@ public abstract class UmlDiagramBuilderBase<TUmlBuilder, TOptions>
 
         var stringBuilder = new StringBuilder();
         stringBuilder.AppendLine(UmlConstants.START_TAG);
+        
         AddDiagramSpecificOptionsStatements(stringBuilder);
         foreach (string additionalOption in Options.AdditionalOptions)
         {
@@ -43,7 +45,12 @@ public abstract class UmlDiagramBuilderBase<TUmlBuilder, TOptions>
         return stringBuilder.ToString().TrimEnd();
     }
 
-    protected virtual void AddDiagramSpecificOptionsStatements(StringBuilder stringBuilder)
+    protected void AddDiagramSpecificOptionsStatements(StringBuilder stringBuilder)
     {
+        var options = Options.GetAllDefinedOptions();
+        foreach (var diagramOption in options.Where(o => o.IsActive))
+        {
+            stringBuilder.AppendLine(diagramOption.GetStatement());
+        }
     }
 }
