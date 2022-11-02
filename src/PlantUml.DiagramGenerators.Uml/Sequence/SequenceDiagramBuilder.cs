@@ -108,4 +108,22 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddNewPage(title);
         return this;
     }
+
+    public SequenceDiagramBuilder AddMessageGroup(Action<MessageGroupStatementBuilder> messageBuilderAction)
+    {
+        UmlBuilder.AddMessageGroup(messageBuilderAction);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddGroup(string groupName, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        UmlBuilder.AddGroup(groupName, umlBuilderAction);
+        return this;
+    }
+
+    public SequenceDiagramBuilder AddLoop(int times, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        UmlBuilder.AddLoop(times, umlBuilderAction);
+        return this;
+    }
 }

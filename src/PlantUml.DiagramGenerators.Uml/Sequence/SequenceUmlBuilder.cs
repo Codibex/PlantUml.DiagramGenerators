@@ -1,6 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-
-namespace PlantUml.DiagramGenerators.Uml.Sequence;
+﻿namespace PlantUml.DiagramGenerators.Uml.Sequence;
 
 public class SequenceUmlBuilder : UmlBuilder
 {
@@ -8,11 +6,11 @@ public class SequenceUmlBuilder : UmlBuilder
 
     internal IEnumerable<string> SequenceKeys => _sequenceKeys.AsReadOnly();
 
-    public SequenceUmlBuilder(int nestingDepth) : base(nestingDepth)
+    internal SequenceUmlBuilder(int nestingDepth) : base(nestingDepth)
     {
     }
 
-    public void AddSequenceKey(string sequenceKey)
+    internal void AddSequenceKey(string sequenceKey)
         => _sequenceKeys.Add(sequenceKey);
 
     public SequenceUmlBuilder AddSequence(string sourceParticipant, string targetParticipant,
@@ -127,6 +125,48 @@ public class SequenceUmlBuilder : UmlBuilder
     {
         string statement = string.IsNullOrWhiteSpace(title) ? string.Empty : $" {title}";
         AddEntry($"newpage{statement}");
+        return this;
+    }
+
+    public SequenceUmlBuilder AddMessageGroup(Action<MessageGroupStatementBuilder> messageBuilderAction)
+    {
+        var builder = new MessageGroupStatementBuilder(NestingDepth);
+        messageBuilderAction.Invoke(builder);
+        string statement = builder.Build();
+        
+        AddEntry(statement);
+        return this;
+    }
+
+    public SequenceUmlBuilder AddGroup(string groupName, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        var builder = new SequenceUmlBuilder(NestingDepth);
+        umlBuilderAction.Invoke(builder);
+        string statement = builder.Build();
+        
+        AddEntry($"group {groupName}");
+        AddEntry(statement, ignoreTabs: true);
+        AddEntry("end");
+        return this;
+    }
+
+    public SequenceUmlBuilder AddLoop(int times, Action<SequenceUmlBuilder> umlBuilderAction)
+    {
+        var loopBuilder = new SequenceUmlBuilder(NestingDepth + 1);
+        var loopBuildAction = (SequenceUmlBuilder lb) =>
+        {
+            var sequenceUmlBuilder = new SequenceUmlBuilder(NestingDepth);
+            umlBuilderAction.Invoke(sequenceUmlBuilder);
+            string statement = sequenceUmlBuilder.Build();
+
+            lb.AddEntry($"loop {times} times");
+            lb.AddEntry(statement);
+            lb.AddEntry("end");
+        };
+
+        loopBuildAction.Invoke(loopBuilder);
+        string loopStatement = loopBuilder.Build();
+        AddEntry(loopStatement, true);
         return this;
     }
 }

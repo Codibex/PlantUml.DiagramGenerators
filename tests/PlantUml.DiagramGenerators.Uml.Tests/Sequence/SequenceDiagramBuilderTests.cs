@@ -286,4 +286,59 @@ Alice -> Bob : message 6
 
         uml.Should().Be(expected);
     }
+
+    [Fact]
+    public void Build_Grouping_Message()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new SequenceOptions("Alice", "Bob", "Authentication Request"))
+            .AddMessageGroup(gb =>
+            {
+                gb.AddAlt("successful case", builder =>
+                    {
+
+                        builder.AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Accepted"));
+                    })
+                    .AddElse("some kind of failure", builder =>
+                    {
+                        builder.AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Failure"));
+                        builder.AddGroup("My own label", subBuilder =>
+                        {
+                            subBuilder
+                                .AddSequence(new SequenceOptions("Alice", "Log", "Log attack start"))
+                                .AddLoop(1000, subSubBuilder =>
+                                {
+                                    subSubBuilder.AddSequence(new SequenceOptions("Alice", "Bob", "DNS Attack"));
+                                })
+                                .AddSequence(new SequenceOptions("Alice", "Log", "Log attack end", ignoreAutomaticArrowDirectionDetection: true));
+                        });
+                    })
+                    .AddElse("Another type of failure", builder =>
+                    {
+                        builder.AddSequence(new SequenceOptions("Bob", "Alice", "Please repeat"));
+                    })
+                    .AddEnd();
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : Authentication Request
+alt successful case
+	Bob -> Alice : Authentication Accepted
+else some kind of failure
+	Bob -> Alice : Authentication Failure
+	group My own label
+	Alice -> Log : Log attack start
+		loop 1000 times
+			Alice -> Bob : DNS Attack
+		end
+	Alice -> Log : Log attack end
+	end
+else Another type of failure
+	Bob -> Alice : Please repeat
+end
+@enduml";
+
+        uml.Should().Be(expected);
+    }
 }
