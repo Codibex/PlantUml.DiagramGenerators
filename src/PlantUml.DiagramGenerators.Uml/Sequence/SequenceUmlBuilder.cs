@@ -140,7 +140,7 @@ public class SequenceUmlBuilder : UmlBuilder
 
     public SequenceUmlBuilder AddGroup(string groupName, Action<SequenceUmlBuilder> umlBuilderAction)
     {
-        var builder = new SequenceUmlBuilder(NestingDepth);
+        var builder = new SequenceUmlBuilder(NestingDepth + 1);
         umlBuilderAction.Invoke(builder);
         string statement = builder.Build();
         
@@ -152,7 +152,7 @@ public class SequenceUmlBuilder : UmlBuilder
 
     public SequenceUmlBuilder AddLoop(int times, Action<SequenceUmlBuilder> umlBuilderAction)
     {
-        var loopBuilder = new LoopUmlBuilder(NestingDepth + 1); 
+        var loopBuilder = new LoopUmlBuilder(NestingDepth); 
         string loopStatement = loopBuilder.AddLoopBody(times, umlBuilderAction).Build();
 
         AddEntry(loopStatement, true);

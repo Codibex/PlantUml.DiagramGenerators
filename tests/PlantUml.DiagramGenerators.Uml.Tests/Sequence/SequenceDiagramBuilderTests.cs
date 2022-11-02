@@ -328,14 +328,46 @@ alt successful case
 else some kind of failure
 	Bob -> Alice : Authentication Failure
 	group My own label
-	Alice -> Log : Log attack start
+		Alice -> Log : Log attack start
 		loop 1000 times
 			Alice -> Bob : DNS Attack
 		end
-	Alice -> Log : Log attack end
+		Alice -> Log : Log attack end
 	end
 else Another type of failure
 	Bob -> Alice : Please repeat
+end
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_Secondary_Group_Label()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddSequence(new SequenceOptions("Alice", "Bob", "Authentication Request"))
+            .AddSequence(new SequenceOptions("Bob", "Alice", "Authentication Failure"))
+            .AddGroup("My own label [My own label 2]", builder =>
+            {
+                builder.AddSequence(new SequenceOptions("Alice", "Log", "Log attack start"))
+                    .AddLoop(1000, subBuilder =>
+                    {
+                        subBuilder.AddSequence(new SequenceOptions("Alice", "Bob", "DNS Attack"));
+                    })
+                    .AddSequence(new SequenceOptions("Alice", "Log", "Log attack end", ignoreAutomaticArrowDirectionDetection: true));
+            })
+            .Build();
+
+        const string expected = @"@startuml
+Alice -> Bob : Authentication Request
+Bob -> Alice : Authentication Failure
+group My own label [My own label 2]
+	Alice -> Log : Log attack start
+	loop 1000 times
+		Alice -> Bob : DNS Attack
+	end
+	Alice -> Log : Log attack end
 end
 @enduml";
 
