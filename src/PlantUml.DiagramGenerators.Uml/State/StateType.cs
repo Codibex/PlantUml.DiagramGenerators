@@ -1,9 +1,9 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Status;
+﻿namespace PlantUml.DiagramGenerators.Uml.State;
 
 /// <summary>
-/// Status types
+/// State types
 /// </summary>
-public enum StatusType
+public enum StateType
 {
     Unspecified,
     Start,

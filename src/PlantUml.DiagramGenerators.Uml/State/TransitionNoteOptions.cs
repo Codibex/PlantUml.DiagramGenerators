@@ -1,4 +1,4 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Status;
+﻿namespace PlantUml.DiagramGenerators.Uml.State;
 
 public class TransitionNoteOptions : NoteOptionsBase
 {

@@ -4,7 +4,7 @@
 /// Builtin functions
 /// </summary>
 /// <remarks>
-/// For details look at https://plantuml.com/de/preprocessing
+/// For details look at https://plantuml.com/en/preprocessing
 /// </remarks>
 public static class BuiltInFunctions
 {

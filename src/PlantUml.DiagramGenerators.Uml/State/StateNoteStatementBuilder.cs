@@ -1,15 +1,15 @@
-﻿namespace PlantUml.DiagramGenerators.Uml.Status;
+﻿namespace PlantUml.DiagramGenerators.Uml.State;
 
-public class StatusNoteStatementBuilder : StatementBuilderBase<StatusOptions>
+public class StateNoteStatementBuilder : StatementBuilderBase<StateOptions>
 {
-    public StatusNoteStatementBuilder(StatusOptions options) : base(options)
+    public StateNoteStatementBuilder(StateOptions options) : base(options)
     {
     }
 
     protected override string GetStatement()
     {
         string[] lines = Options.NoteOptions!.Note.Split(Environment.NewLine);
-        var note = $"note {GetPositionStatement()} of {Options.GetStatusName()}";
+        var note = $"note {GetPositionStatement()} of {Options.GetStateName()}";
         if (lines.Length == 1)
         {
             return $"{note} : {Options.NoteOptions!.Note}";

@@ -1,22 +1,22 @@
 ﻿using FluentAssertions;
-using PlantUml.DiagramGenerators.Uml.Status;
+using PlantUml.DiagramGenerators.Uml.State;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
+namespace PlantUml.DiagramGenerators.Uml.Tests.State;
 
-public class StatusDiagramBuilderNotesTests
+public class StateDiagramBuilderNotesTests
 {
     [Fact]
     public void Build_Note()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("Active")
-            .AddStatusTransition(new StatusOptions("Active")
+            .AddStateTransition(new StateOptions("Active")
             {
-                NoteOptions = new StatusNoteOptions("this is a short\\nnote", NotePosition.Left)
+                NoteOptions = new StateNoteOptions("this is a short\\nnote", NotePosition.Left)
             },
-                new StatusOptions("Inactive")
+                new StateOptions("Inactive")
                 {
-                    NoteOptions = new StatusNoteOptions(@"A note can also
+                    NoteOptions = new StateNoteOptions(@"A note can also
 be defined on
 several lines", NotePosition.Right)
                 })
@@ -40,8 +40,8 @@ end note
     [Fact]
     public void Build_Floating_Note()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStatus(new StatusOptions("foo"))
+        string uml = new StateDiagramBuilder()
+            .AddState(new StateOptions("foo"))
             .AddNote(new NoteOptions("This is a floating note", "N1"))
             .Build();
 
@@ -57,9 +57,9 @@ note ""This is a floating note"" as N1
     [Fact]
     public void Build_Link_Note()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("State1")
-            .AddStatusTransition("State1", "State2", noteOptions: new TransitionNoteOptions("  this is a state-transition note"))
+            .AddStateTransition("State1", "State2", noteOptions: new TransitionNoteOptions("  this is a state-transition note"))
             .Build();
 
         const string expected = @"@startuml
@@ -77,27 +77,27 @@ end note
     [Fact]
     public void Build_More_Notes()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStartTransition(new StatusOptions("NotShooting")
+        string uml = new StateDiagramBuilder()
+            .AddStartTransition(new StateOptions("NotShooting")
             {
-                NoteOptions = new StatusNoteOptions("This is a note on a composite", NotePosition.Right)
+                NoteOptions = new StateNoteOptions("This is a note on a composite", NotePosition.Right)
             })
-            .AddSubStatus(new StatusOptions("Not Shooting State")
+            .AddSubState(new StateOptions("Not Shooting State")
             {
                 Alias = "NotShooting"
             }, b =>
             {
-                b.AddStatus(new StatusOptions("Idle mode")
+                b.AddState(new StateOptions("Idle mode")
                 {
                     Alias = "Idle"
                 })
-                    .AddStatus(new StatusOptions("Configuring mode")
+                    .AddState(new StateOptions("Configuring mode")
                     {
                         Alias = "Configuring"
                     })
                     .AddStartTransition("Idle")
-                    .AddStatusTransition("Idle", "Configuring", "EvConfig")
-                    .AddStatusTransition("Configuring", "Idle", "EvConfig");
+                    .AddStateTransition("Idle", "Configuring", "EvConfig")
+                    .AddStateTransition("Configuring", "Idle", "EvConfig");
             })
             .Build(options =>
             {

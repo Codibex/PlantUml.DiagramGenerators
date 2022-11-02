@@ -1,17 +1,17 @@
 ﻿using FluentAssertions;
-using PlantUml.DiagramGenerators.Uml.Status;
+using PlantUml.DiagramGenerators.Uml.State;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
+namespace PlantUml.DiagramGenerators.Uml.Tests.State;
 
-public class StatusDiagramBuilderTests
+public class StateDiagramBuilderTests
 {
     [Fact]
-    public void Build_SimpleStatus()
+    public void Build_SimpleState()
     {
-        var builder = new StatusDiagramBuilder();
+        var builder = new StateDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
-            .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
+            .AddStateTransition("New", "InProgress")
+            .AddStateTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
             .AddFinalTransition("Completed", arrowConfig: config => { config.Length = 6; })
             .Build();
 
@@ -27,16 +27,16 @@ Completed ------> [*]
     }
 
     [Fact]
-    public void Build_With_SubStatus()
+    public void Build_With_SubState()
     {
-        var builder = new StatusDiagramBuilder();
+        var builder = new StateDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
-            .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
-            .AddSubStatus("InProgress", b =>
+            .AddStateTransition("New", "InProgress")
+            .AddStateTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
+            .AddSubState("InProgress", b =>
             {
                 b.AddStartTransition("State1")
-                    .AddStatusTransition("State1", "State2")
+                    .AddStateTransition("State1", "State2")
                     .AddFinalTransition("State2");
             })
             .AddFinalTransition("Completed", arrowConfig: config => { config.Length = 6; })
@@ -59,21 +59,21 @@ Completed ------> [*]
     }
 
     [Fact]
-    public void Build_With_SubStatus_In_SubStatus()
+    public void Build_With_SubState_In_SubState()
     {
-        var builder = new StatusDiagramBuilder();
+        var builder = new StateDiagramBuilder();
         string uml = builder.AddStartTransition("New", arrowConfig: config => { config.Length = 3; })
-            .AddStatusTransition("New", "InProgress")
-            .AddStatusTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
-            .AddSubStatus("InProgress", b =>
+            .AddStateTransition("New", "InProgress")
+            .AddStateTransition("InProgress", "Completed", arrowConfig: config => { config.Length = 1; })
+            .AddSubState("InProgress", b =>
             {
                 b.AddStartTransition("State1")
-                    .AddStatusTransition("State1", "State2")
-                    .AddSubStatus("State2", b =>
+                    .AddStateTransition("State1", "State2")
+                    .AddSubState("State2", b =>
                     {
-                        b.AddStartTransition("Status6")
-                            .AddStatusTransition("Status6", "Status7")
-                            .AddFinalTransition("Status7");
+                        b.AddStartTransition("State6")
+                            .AddStateTransition("State6", "State7")
+                            .AddFinalTransition("State7");
                     })
                     .AddFinalTransition("State2");
             })
@@ -89,9 +89,9 @@ state InProgress {
 	[*] --> State1
 	State1 --> State2
 	state State2 {
-		[*] --> Status6
-		Status6 --> Status7
-		Status7 --> [*]
+		[*] --> State6
+		State6 --> State7
+		State7 --> [*]
 	}
 	State2 --> [*]
 }
@@ -104,22 +104,22 @@ Completed ------> [*]
     [Fact]
     public void Build_CompositeState()
     {
-        string uml = new StatusDiagramBuilder().AddStartTransition("NotShooting")
-            .AddSubStatus("NotShooting", b =>
+        string uml = new StateDiagramBuilder().AddStartTransition("NotShooting")
+            .AddSubState("NotShooting", b =>
             {
                 b.AddStartTransition("Idle")
-                    .AddStatusTransition("Idle", "Configuring", "EvConfig")
-                    .AddStatusTransition("Configuring", "Idle", "EvConfig");
+                    .AddStateTransition("Idle", "Configuring", "EvConfig")
+                    .AddStateTransition("Configuring", "Idle", "EvConfig");
             })
-            .AddSubStatus("Configuring", b =>
+            .AddSubState("Configuring", b =>
             {
                 b.AddStartTransition("NewValueSelection")
-                    .AddStatusTransition("NewValueSelection", "NewValuePreview", "EvNewValue")
-                    .AddStatusTransition("NewValuePreview", "NewValueSelection", "EvNewValueRejected")
-                    .AddStatusTransition("NewValuePreview", "NewValueSelection", "EvNewValueSaved")
-                    .AddSubStatus("NewValuePreview", sb =>
+                    .AddStateTransition("NewValueSelection", "NewValuePreview", "EvNewValue")
+                    .AddStateTransition("NewValuePreview", "NewValueSelection", "EvNewValueRejected")
+                    .AddStateTransition("NewValuePreview", "NewValueSelection", "EvNewValueSaved")
+                    .AddSubState("NewValuePreview", sb =>
                     {
-                        sb.AddStatusTransition("State1", "State2");
+                        sb.AddStateTransition("State1", "State2");
                     });
             })
             .Build(options =>
@@ -153,17 +153,17 @@ state Configuring {
     [Fact]
     public void Build_SubState_To_SubState()
     {
-        string uml = new StatusDiagramBuilder().AddSubStatus("A", b =>
+        string uml = new StateDiagramBuilder().AddSubState("A", b =>
             {
-                b.AddSubStatus("X", b => { })
-                    .AddSubStatus("Y", b => { });
+                b.AddSubState("X", b => { })
+                    .AddSubState("Y", b => { });
             })
-            .AddSubStatus("B", b =>
+            .AddSubState("B", b =>
             {
-                b.AddSubStatus("Z", b => { });
+                b.AddSubState("Z", b => { });
             })
-            .AddStatusTransition("X", "Z")
-            .AddStatusTransition("Z", "Y")
+            .AddStateTransition("X", "Z")
+            .AddStateTransition("Z", "Y")
             .Build(options =>
             {
                 options.HideEmptyDescriptionTag = false;
@@ -193,24 +193,24 @@ Z --> Y
     [Fact]
     public void Build_LongName()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("State1")
-            .AddStatusTransition("State1", "State2", "Succeeded")
+            .AddStateTransition("State1", "State2", "Succeeded")
             .AddFinalTransition("State1", "Aborted")
-            .AddStatusTransition("State2", "State3", "Succeeded")
+            .AddStateTransition("State2", "State3", "Succeeded")
             .AddFinalTransition("State2", "Aborted")
-            .AddSubStatus("State3", b =>
+            .AddSubState("State3", b =>
             {
-                b.AddStatus(new StatusOptions("Accumulate Enough Data\\nLong State Name")
+                b.AddState(new StateOptions("Accumulate Enough Data\\nLong State Name")
                 {
                     Alias = "long1",
                     Description = "Just a test",
                 })
                     .AddStartTransition("long1")
-                    .AddStatusTransition("long1", "long1", "New Data")
-                    .AddStatusTransition("long1", "ProcessData", "Enough Data");
+                    .AddStateTransition("long1", "long1", "New Data")
+                    .AddStateTransition("long1", "ProcessData", "Enough Data");
             })
-            .AddStatusTransition("State3", "State3", "Failed")
+            .AddStateTransition("State3", "State3", "Failed")
             .AddFinalTransition("State3", "Success / Save Result")
             .AddFinalTransition("State3", "Aborted")
             .Build(options =>
@@ -243,23 +243,23 @@ State3 --> [*] : Aborted
     [Fact]
     public void Build_Fork()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStatus(new StatusOptions("fork_state")
+        string uml = new StateDiagramBuilder()
+            .AddState(new StateOptions("fork_state")
             {
                 Alias = "f1",
-                Type = StatusType.Fork
+                Type = StateType.Fork
             })
             .AddStartTransition("f1")
-            .AddStatusTransition("f1", "State2")
-            .AddStatusTransition("f1", "State3")
-            .AddStatus(new StatusOptions("join_state")
+            .AddStateTransition("f1", "State2")
+            .AddStateTransition("f1", "State3")
+            .AddState(new StateOptions("join_state")
             {
                 Alias = "f2",
-                Type = StatusType.Join
+                Type = StateType.Join
             })
-            .AddStatusTransition("State2", "f2", "Succeeded")
-            .AddStatusTransition("State3", "f2", "Aborted")
-            .AddStatusTransition("f2", "State4")
+            .AddStateTransition("State2", "f2", "Succeeded")
+            .AddStateTransition("State3", "f2", "Aborted")
+            .AddStateTransition("f2", "State4")
             .AddFinalTransition("State4")
             .Build();
 
@@ -282,19 +282,19 @@ State4 --> [*]
     [Fact]
     public void Build_Concurrent_Horizontal()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("Active")
-            .AddSubStatus("Active", b =>
+            .AddSubState("Active", b =>
             {
                 b.AddStartTransition("NumLockOff")
-                    .AddStatusTransition("NumLockOff", "NumLockOn", "EvNumLockPressed")
-                    .AddStatusTransition("NumLockOn", "NumLockOff", "EvNumLockPressed")
+                    .AddStateTransition("NumLockOff", "NumLockOn", "EvNumLockPressed")
+                    .AddStateTransition("NumLockOn", "NumLockOff", "EvNumLockPressed")
                     .AddConcurrentSeparator(ConcurrentSeparator.Horizontal)
-                    .AddStatusTransition("CapsLockOff", "CapsLockOn", "EvCapsLockPressed")
-                    .AddStatusTransition("CapsLockOn", "CapsLockOff", "EvCapsLockPressed")
+                    .AddStateTransition("CapsLockOff", "CapsLockOn", "EvCapsLockPressed")
+                    .AddStateTransition("CapsLockOn", "CapsLockOff", "EvCapsLockPressed")
                     .AddConcurrentSeparator(ConcurrentSeparator.Horizontal)
-                    .AddStatusTransition("ScrollLockOff", "ScrollLockOn", "EvCapsLockPressed")
-                    .AddStatusTransition("ScrollLockOn", "ScrollLockOff", "EvCapsLockPressed");
+                    .AddStateTransition("ScrollLockOff", "ScrollLockOn", "EvCapsLockPressed")
+                    .AddStateTransition("ScrollLockOn", "ScrollLockOff", "EvCapsLockPressed");
             })
             .Build();
 
@@ -320,19 +320,19 @@ state Active {
     [Fact]
     public void Build_Concurrent_Vertical()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("Active")
-            .AddSubStatus("Active", b =>
+            .AddSubState("Active", b =>
             {
                 b.AddStartTransition("NumLockOff")
-                    .AddStatusTransition("NumLockOff", "NumLockOn", "EvNumLockPressed")
-                    .AddStatusTransition("NumLockOn", "NumLockOff", "EvNumLockPressed")
+                    .AddStateTransition("NumLockOff", "NumLockOn", "EvNumLockPressed")
+                    .AddStateTransition("NumLockOn", "NumLockOff", "EvNumLockPressed")
                     .AddConcurrentSeparator(ConcurrentSeparator.Vertical)
-                    .AddStatusTransition("CapsLockOff", "CapsLockOn", "EvCapsLockPressed")
-                    .AddStatusTransition("CapsLockOn", "CapsLockOff", "EvCapsLockPressed")
+                    .AddStateTransition("CapsLockOff", "CapsLockOn", "EvCapsLockPressed")
+                    .AddStateTransition("CapsLockOn", "CapsLockOff", "EvCapsLockPressed")
                     .AddConcurrentSeparator(ConcurrentSeparator.Vertical)
-                    .AddStatusTransition("ScrollLockOff", "ScrollLockOn", "EvCapsLockPressed")
-                    .AddStatusTransition("ScrollLockOn", "ScrollLockOff", "EvCapsLockPressed");
+                    .AddStateTransition("ScrollLockOff", "ScrollLockOn", "EvCapsLockPressed")
+                    .AddStateTransition("ScrollLockOn", "ScrollLockOff", "EvCapsLockPressed");
             })
             .Build();
 
@@ -358,35 +358,35 @@ state Active {
     [Fact]
     public void Build_Stereotypes_full()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStatus(new StatusOptions("start1")
+        string uml = new StateDiagramBuilder()
+            .AddState(new StateOptions("start1")
             {
-                Type = StatusType.Start
+                Type = StateType.Start
             })
-            .AddStatus(new StatusOptions("choice1")
+            .AddState(new StateOptions("choice1")
             {
-                Type = StatusType.Choice
+                Type = StateType.Choice
             })
-            .AddStatus(new StatusOptions("fork1")
+            .AddState(new StateOptions("fork1")
             {
-                Type = StatusType.Fork
+                Type = StateType.Fork
             })
-            .AddStatus(new StatusOptions("join2")
+            .AddState(new StateOptions("join2")
             {
-                Type = StatusType.Join
+                Type = StateType.Join
             })
-            .AddStatus(new StatusOptions("end3")
+            .AddState(new StateOptions("end3")
             {
-                Type = StatusType.End
+                Type = StateType.End
             })
             .AddStartTransition("choice1", "from start \\nto choice")
-            .AddStatusTransition("start1", "choice1", "from start stereo\\nto choice")
-            .AddStatusTransition("choice1", "fork1", "from choice\\nto fork")
-            .AddStatusTransition("choice1", "join2", "from choice\\nto join")
-            .AddStatusTransition("choice1", "end3", "from choice\\nto end stereo")
-            .AddStatusTransition("fork1", "State1", "from fork\\nto state")
-            .AddStatusTransition("fork1", "State2", "from fork\\nto state")
-            .AddStatusTransition("State2", "join2", "from state\\nto join")
+            .AddStateTransition("start1", "choice1", "from start stereo\\nto choice")
+            .AddStateTransition("choice1", "fork1", "from choice\\nto fork")
+            .AddStateTransition("choice1", "join2", "from choice\\nto join")
+            .AddStateTransition("choice1", "end3", "from choice\\nto end stereo")
+            .AddStateTransition("fork1", "State1", "from fork\\nto state")
+            .AddStateTransition("fork1", "State2", "from fork\\nto state")
+            .AddStateTransition("State2", "join2", "from state\\nto join")
             .AddFinalTransition("State1", "from state\\nto end")
             .AddFinalTransition("join2", "from join\\nto end")
             .Build();
@@ -416,30 +416,30 @@ join2 --> [*] : from join\nto end
     [Fact]
     public void Build_Point()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddSubStatus("Somp", b =>
+        string uml = new StateDiagramBuilder()
+            .AddSubState("Somp", b =>
             {
                 b
-                    .AddStatus(new StatusOptions("entry1")
+                    .AddState(new StateOptions("entry1")
                     {
-                        Type = StatusType.EntryPoint
+                        Type = StateType.EntryPoint
                     })
-                    .AddStatus(new StatusOptions("entry2")
+                    .AddState(new StateOptions("entry2")
                     {
-                        Type = StatusType.EntryPoint
+                        Type = StateType.EntryPoint
                     })
-                    .AddStatus(new StatusOptions("sin"))
-                    .AddStatusTransition("entry1", "sin")
-                    .AddStatusTransition("entry2", "sin")
-                    .AddStatusTransition("sin", "sin2")
-                    .AddStatusTransition(new StatusOptions("sin2"), new StatusOptions("exitA")
+                    .AddState(new StateOptions("sin"))
+                    .AddStateTransition("entry1", "sin")
+                    .AddStateTransition("entry2", "sin")
+                    .AddStateTransition("sin", "sin2")
+                    .AddStateTransition(new StateOptions("sin2"), new StateOptions("exitA")
                     {
-                        Type = StatusType.ExitPoint
+                        Type = StateType.ExitPoint
                     });
             })
             .AddStartTransition("entry1")
-            .AddStatusTransition("exitA", "Foo")
-            .AddStatusTransition("Foo1", "entry2")
+            .AddStateTransition("exitA", "Foo")
+            .AddStateTransition("Foo1", "entry2")
             .Build();
 
         const string expected = @"@startuml
@@ -464,30 +464,30 @@ Foo1 --> entry2
     [Fact]
     public void Build_Pin()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddSubStatus("Somp", b =>
+        string uml = new StateDiagramBuilder()
+            .AddSubState("Somp", b =>
             {
                 b
-                    .AddStatus(new StatusOptions("entry1")
+                    .AddState(new StateOptions("entry1")
                     {
-                        Type = StatusType.InputPin
+                        Type = StateType.InputPin
                     })
-                    .AddStatus(new StatusOptions("entry2")
+                    .AddState(new StateOptions("entry2")
                     {
-                        Type = StatusType.InputPin
+                        Type = StateType.InputPin
                     })
-                    .AddStatus(new StatusOptions("sin"))
-                    .AddStatusTransition("entry1", "sin")
-                    .AddStatusTransition("entry2", "sin")
-                    .AddStatusTransition("sin", "sin2")
-                    .AddStatusTransition(new StatusOptions("sin2"), new StatusOptions("exitA")
+                    .AddState(new StateOptions("sin"))
+                    .AddStateTransition("entry1", "sin")
+                    .AddStateTransition("entry2", "sin")
+                    .AddStateTransition("sin", "sin2")
+                    .AddStateTransition(new StateOptions("sin2"), new StateOptions("exitA")
                     {
-                        Type = StatusType.OutputPin
+                        Type = StateType.OutputPin
                     });
             })
             .AddStartTransition("entry1")
-            .AddStatusTransition("exitA", "Foo")
-            .AddStatusTransition("Foo1", "entry2")
+            .AddStateTransition("exitA", "Foo")
+            .AddStateTransition("Foo1", "entry2")
             .Build();
 
         const string expected = @"@startuml
@@ -512,30 +512,30 @@ Foo1 --> entry2
     [Fact]
     public void Build_Expansion()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddSubStatus("Somp", b =>
+        string uml = new StateDiagramBuilder()
+            .AddSubState("Somp", b =>
             {
                 b
-                    .AddStatus(new StatusOptions("entry1")
+                    .AddState(new StateOptions("entry1")
                     {
-                        Type = StatusType.ExpansionInput
+                        Type = StateType.ExpansionInput
                     })
-                    .AddStatus(new StatusOptions("entry2")
+                    .AddState(new StateOptions("entry2")
                     {
-                        Type = StatusType.ExpansionInput
+                        Type = StateType.ExpansionInput
                     })
-                    .AddStatus(new StatusOptions("sin"))
-                    .AddStatusTransition("entry1", "sin")
-                    .AddStatusTransition("entry2", "sin")
-                    .AddStatusTransition("sin", "sin2")
-                    .AddStatusTransition(new StatusOptions("sin2"), new StatusOptions("exitA")
+                    .AddState(new StateOptions("sin"))
+                    .AddStateTransition("entry1", "sin")
+                    .AddStateTransition("entry2", "sin")
+                    .AddStateTransition("sin", "sin2")
+                    .AddStateTransition(new StateOptions("sin2"), new StateOptions("exitA")
                     {
-                        Type = StatusType.ExpansionOutput
+                        Type = StateType.ExpansionOutput
                     });
             })
             .AddStartTransition("entry1")
-            .AddStatusTransition("exitA", "Foo")
-            .AddStatusTransition("Foo1", "entry2")
+            .AddStateTransition("exitA", "Foo")
+            .AddStateTransition("Foo1", "entry2")
             .Build();
 
         const string expected = @"@startuml
@@ -560,36 +560,36 @@ Foo1 --> entry2
     [Fact]
     public void Build_Alias()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStatus(new StatusOptions("alias1"))
-            .AddStatus(new StatusOptions("alias2"))
-            .AddStatus(new StatusOptions("long name")
+        string uml = new StateDiagramBuilder()
+            .AddState(new StateOptions("alias1"))
+            .AddState(new StateOptions("alias2"))
+            .AddState(new StateOptions("long name")
             {
                 Alias = "alias3"
             })
-            .AddStatus(new StatusOptions("alias4")
+            .AddState(new StateOptions("alias4")
             {
                 Alias = "long name"
             })
-            .AddStatus(new StatusOptions("alias1")
+            .AddState(new StateOptions("alias1")
             {
                 Description = "state alias1"
             })
-            .AddStatus(new StatusOptions("alias2")
+            .AddState(new StateOptions("alias2")
             {
                 Description = "state alias2"
             })
-            .AddStatus(new StatusOptions("alias3")
+            .AddState(new StateOptions("alias3")
             {
                 Description = "state \"long name\" as alias3"
             })
-            .AddStatus(new StatusOptions("alias4")
+            .AddState(new StateOptions("alias4")
             {
                 Description = "state alias4 as \"long name\""
             })
-            .AddStatusTransition("alias1", "alias2")
-            .AddStatusTransition("alias2", "alias3")
-            .AddStatusTransition("alias3", "alias4")
+            .AddStateTransition("alias1", "alias2")
+            .AddStateTransition("alias2", "alias3")
+            .AddStateTransition("alias3", "alias4")
             .Build(options =>
             {
                 options.HideEmptyDescriptionTag = false;

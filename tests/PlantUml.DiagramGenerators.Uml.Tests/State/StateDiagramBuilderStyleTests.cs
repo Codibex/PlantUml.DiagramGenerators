@@ -1,23 +1,23 @@
 ﻿using FluentAssertions;
-using PlantUml.DiagramGenerators.Uml.Status;
+using PlantUml.DiagramGenerators.Uml.State;
 
-namespace PlantUml.DiagramGenerators.Uml.Tests.Status;
-public class StatusDiagramBuilderStyleTests
+namespace PlantUml.DiagramGenerators.Uml.Tests.State;
+public class StateDiagramBuilderStyleTests
 {
     [Fact]
     public void Build_Arrow_Direction()
     {
-        string uml = new StatusDiagramBuilder()
+        string uml = new StateDiagramBuilder()
             .AddStartTransition("First", arrowConfig: config =>
             {
                 config.Direction = ArrowDirection.Up;
             })
-            .AddStatusTransition("First", "Second", arrowConfig: config =>
+            .AddStateTransition("First", "Second", arrowConfig: config =>
             {
                 config.Direction = ArrowDirection.Right;
             })
-            .AddStatusTransition("Second", "Third")
-            .AddStatusTransition("Third", "Last", arrowConfig: config =>
+            .AddStateTransition("Second", "Third")
+            .AddStateTransition("Third", "Last", arrowConfig: config =>
             {
                 config.Direction = ArrowDirection.Left;
             })
@@ -37,36 +37,36 @@ Third -left-> Last
     [Fact]
     public void Build_LineStyle()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddStatus(new StatusOptions("S1"))
-            .AddStatus(new StatusOptions("S2"))
-            .AddStatusTransition("S1", "S2", arrowConfig: config =>
+        string uml = new StateDiagramBuilder()
+            .AddState(new StateOptions("S1"))
+            .AddState(new StateOptions("S2"))
+            .AddStateTransition("S1", "S2", arrowConfig: config =>
             {
                 config.Color = "#DD00AA";
             })
-            .AddStatusTransition("S1", "S3", arrowConfig: config =>
+            .AddStateTransition("S1", "S3", arrowConfig: config =>
             {
                 config.Color = "#yellow";
             })
-            .AddStatusTransition("S1", "S4", arrowConfig: config =>
+            .AddStateTransition("S1", "S4", arrowConfig: config =>
             {
                 config.Color = "#red";
                 config.Style = "dashed";
             })
-            .AddStatusTransition("S1", "S5", arrowConfig: config =>
+            .AddStateTransition("S1", "S5", arrowConfig: config =>
             {
                 config.Color = "#blue";
                 config.Style = "dotted";
             })
-            .AddStatusTransition("X1", "X2", arrowConfig: config =>
+            .AddStateTransition("X1", "X2", arrowConfig: config =>
             {
                 config.Style = "dashed";
             })
-            .AddStatusTransition("Z1", "Z2", arrowConfig: config =>
+            .AddStateTransition("Z1", "Z2", arrowConfig: config =>
             {
                 config.Style = "dotted";
             })
-            .AddStatusTransition("Y1", "Y2", arrowConfig: config =>
+            .AddStateTransition("Y1", "Y2", arrowConfig: config =>
             {
                 config.Color = "#blue";
                 config.Style = "bold";
@@ -92,46 +92,46 @@ Y1 -[#blue,bold]-> Y2
     [Fact]
     public void Build_InlineColor()
     {
-        string uml = new StatusDiagramBuilder()
-            .AddSubStatus(new StatusOptions("CurrentSite")
+        string uml = new StateDiagramBuilder()
+            .AddSubState(new StateOptions("CurrentSite")
             {
                 Color = "#pink"
             }, b =>
             {
-                b.AddSubStatus(new StatusOptions("HardwareSetup")
+                b.AddSubState(new StateOptions("HardwareSetup")
                 {
                     Color = "#lightblue"
                 }, sb =>
                 {
-                    sb.AddStatus(new StatusOptions("Site")
+                    sb.AddState(new StateOptions("Site")
                     {
                         Color = "#brown"
                     })
-                        .AddStatusTransition("Site", "Controller", arrowConfig: config =>
+                        .AddStateTransition("Site", "Controller", arrowConfig: config =>
                         {
                             config.Style = "hidden";
                         })
-                        .AddStatusTransition("Controller", "Devices", arrowConfig: config =>
+                        .AddStateTransition("Controller", "Devices", arrowConfig: config =>
                         {
                             config.Style = "hidden";
                         });
                 })
-                    .AddSubStatus(new StatusOptions("PresentationSetup"), sb =>
+                    .AddSubState(new StateOptions("PresentationSetup"), sb =>
                     {
-                        sb.AddStatusTransition("Groups", "PlansAndGraphics", arrowConfig: config =>
+                        sb.AddStateTransition("Groups", "PlansAndGraphics", arrowConfig: config =>
                         {
                             config.Style = "hidden";
                         });
                     })
-                    .AddStatus(new StatusOptions("Trends")
+                    .AddState(new StateOptions("Trends")
                     {
                         Color = "#FFFF77"
                     })
-                    .AddStatus(new StatusOptions("Schedule")
+                    .AddState(new StateOptions("Schedule")
                     {
                         Color = "#magenta"
                     })
-                    .AddStatus(new StatusOptions("AlarmSupression"));
+                    .AddState(new StateOptions("AlarmSupression"));
             })
             .Build();
 

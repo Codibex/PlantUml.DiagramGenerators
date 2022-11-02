@@ -2,9 +2,9 @@
 
 public class DiagramOptions
 {
-    protected List<string> Options { get; } = new();
+    private List<string> Options { get; } = new();
 
-    public IReadOnlyList<string> AdditionalOptions => Options;
+    public IEnumerable<string> AdditionalOptions => Options;
 
     public DiagramOptions AddOptions(params string[] options)
     {

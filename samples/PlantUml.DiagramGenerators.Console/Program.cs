@@ -1,6 +1,6 @@
 ﻿using PlantUml.DiagramGenerators.Core;
 using PlantUml.DiagramGenerators.Uml.Sequence;
-using PlantUml.DiagramGenerators.Uml.Status;
+using PlantUml.DiagramGenerators.Uml.State;
 using PlantUml.Net;
 
 string CreatePngFromJson()
@@ -18,22 +18,22 @@ string CreatePngFromJson()
 
 string CreateUmlCompositeState()
 {
-    return new StatusDiagramBuilder().AddStartTransition("NotShooting")
-        .AddSubStatus("NotShooting", b =>
+    return new StateDiagramBuilder().AddStartTransition("NotShooting")
+        .AddSubState("NotShooting", b =>
         {
             b.AddStartTransition("Idle")
-                .AddStatusTransition("Idle", "Configuring", "EvConfig")
-                .AddStatusTransition("Configuring", "Idle", "EvConfig");
+                .AddStateTransition("Idle", "Configuring", "EvConfig")
+                .AddStateTransition("Configuring", "Idle", "EvConfig");
         })
-        .AddSubStatus("Configuring", b =>
+        .AddSubState("Configuring", b =>
         {
             b.AddStartTransition("NewValueSelection")
-                .AddStatusTransition("NewValueSelection", "NewValuePreview", "EvNewValue")
-                .AddStatusTransition("NewValuePreview", "NewValueSelection", "EvNewValueRejected")
-                .AddStatusTransition("NewValuePreview", "NewValueSelection", "EvNewValueSaved")
-                .AddSubStatus("NewValuePreview", b =>
+                .AddStateTransition("NewValueSelection", "NewValuePreview", "EvNewValue")
+                .AddStateTransition("NewValuePreview", "NewValueSelection", "EvNewValueRejected")
+                .AddStateTransition("NewValuePreview", "NewValueSelection", "EvNewValueSaved")
+                .AddSubState("NewValuePreview", b =>
                 {
-                    b.AddStatusTransition("State1", "State2");
+                    b.AddStateTransition("State1", "State2");
                 });
         })
         .Build();
@@ -41,17 +41,17 @@ string CreateUmlCompositeState()
 
 string CreateUmlSubStateToSubState()
 {
-    return new StatusDiagramBuilder().AddSubStatus("A", b =>
+    return new StateDiagramBuilder().AddSubState("A", b =>
         {
-            b.AddSubStatus("X", b => { })
-                .AddSubStatus("Y", b => { });
+            b.AddSubState("X", b => { })
+                .AddSubState("Y", b => { });
         })
-        .AddSubStatus("B", b =>
+        .AddSubState("B", b =>
         {
-            b.AddSubStatus("Z", b => { });
+            b.AddSubState("Z", b => { });
         })
-        .AddStatusTransition("X", "Z")
-        .AddStatusTransition("Z", "Y")
+        .AddStateTransition("X", "Z")
+        .AddStateTransition("Z", "Y")
         .Build(options =>
         {
             options.HideEmptyDescriptionTag = false;
@@ -60,24 +60,24 @@ string CreateUmlSubStateToSubState()
 
 string CreateUmlLongName()
 {
-    return new StatusDiagramBuilder()
+    return new StateDiagramBuilder()
         .AddStartTransition("State1")
-        .AddStatusTransition("State1", "State2", "Succeeded")
+        .AddStateTransition("State1", "State2", "Succeeded")
         .AddFinalTransition("State1", "Aborted")
-        .AddStatusTransition("State2", "State3", "Succeeded")
+        .AddStateTransition("State2", "State3", "Succeeded")
         .AddFinalTransition("State2", "Aborted")
-        .AddSubStatus("State3", b =>
+        .AddSubState("State3", b =>
         {
-            b.AddStatus(new StatusOptions("Accumulate Enough Data\\nLong State Name")
+            b.AddState(new StateOptions("Accumulate Enough Data\\nLong State Name")
                 {
                     Alias = "long1",
                     Description = "Just a test"
                 })
                 .AddStartTransition("long1")
-                .AddStatusTransition("long1", "long1", "New Data")
-                .AddStatusTransition("long1", "ProcessData", "Enough Data");
+                .AddStateTransition("long1", "long1", "New Data")
+                .AddStateTransition("long1", "ProcessData", "Enough Data");
         })
-        .AddStatusTransition("State3", "State3", "Failed")
+        .AddStateTransition("State3", "State3", "Failed")
         .AddFinalTransition("State3", "Success / Save Result")
         .AddFinalTransition("State3", "Aborted")
         .Build(options =>
@@ -88,23 +88,23 @@ string CreateUmlLongName()
 
 string CreateUmlFork()
 {
-    return new StatusDiagramBuilder()
-        .AddStatus(new StatusOptions("fork_state")
+    return new StateDiagramBuilder()
+        .AddState(new StateOptions("fork_state")
         {
             Alias = "f1",
-            Type = StatusType.Fork
+            Type = StateType.Fork
         })
         .AddStartTransition("f1")
-        .AddStatusTransition("f1", "State2")
-        .AddStatusTransition("f1", "State3")
-        .AddStatus(new StatusOptions("join_state")
+        .AddStateTransition("f1", "State2")
+        .AddStateTransition("f1", "State3")
+        .AddState(new StateOptions("join_state")
         {
             Alias = "f2",
-            Type = StatusType.Join
+            Type = StateType.Join
         })
-        .AddStatusTransition("State2", "f2", "Succeeded")
-        .AddStatusTransition("State3", "f2", "Aborted")
-        .AddStatusTransition("f2", "State4")
+        .AddStateTransition("State2", "f2", "Succeeded")
+        .AddStateTransition("State3", "f2", "Aborted")
+        .AddStateTransition("f2", "State4")
         .AddFinalTransition("State4")
         .Build();
 }
