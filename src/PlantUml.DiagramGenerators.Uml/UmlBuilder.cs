@@ -1,9 +1,35 @@
-﻿namespace PlantUml.DiagramGenerators.Uml;
+﻿using System.Text;
+using PlantUml.DiagramGenerators.Uml.Utilities;
 
-public class UmlBuilder
+namespace PlantUml.DiagramGenerators.Uml;
+
+/// <summary>
+/// Base class which provides base functionality to provide an uml part
+/// </summary>
+public abstract class UmlBuilder
 {
-    protected const string START_TAG = "@startuml";
-    protected const string END_TAG = "@enduml";
+    protected int NestingDepth { get; }
+    private SortedList<int, string> Statements { get; } = new();
 
-    protected const string HIDE_EMPTY_DESCRIPTION_TAG = "hide empty description";
+    protected UmlBuilder(int nestingDepth)
+    {
+        NestingDepth = nestingDepth;
+    }
+
+    internal string Build()
+    {
+        var stringBuilder = new StringBuilder();
+        foreach (string value in Statements.Values)
+        {
+            stringBuilder.AppendLine(value);
+        }
+
+        return stringBuilder.ToString().TrimEnd();
+    }
+
+    protected void AddEntry(string entry, bool ignoreTabs = false)
+    {
+        string tabs = ignoreTabs ? string.Empty : Tab.GetTabs(NestingDepth);
+        Statements.Add(Statements.Count, $"{tabs}{entry}");
+    }
 }
