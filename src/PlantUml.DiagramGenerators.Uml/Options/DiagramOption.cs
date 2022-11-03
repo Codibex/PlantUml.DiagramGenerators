@@ -1,12 +1,12 @@
 ﻿namespace PlantUml.DiagramGenerators.Uml.Options;
 
-public partial class DiagramOption
+public class DiagramOption
 {
     private string Parameter { get; }
 
     public bool IsActive { get; set; }
 
-    private DiagramOption(string parameter)
+    protected DiagramOption(string parameter)
     {
         Parameter = parameter;
     }

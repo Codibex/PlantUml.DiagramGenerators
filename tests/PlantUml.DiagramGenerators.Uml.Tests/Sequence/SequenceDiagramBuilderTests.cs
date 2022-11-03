@@ -184,7 +184,7 @@ Alice -> Alice : This is a signal to self.\nIt also demonstrates\nmultiline \nte
             .AddSequence("Alice", "Bob", "Response")
             .Build(options =>
             {
-                options.AddOptions(SkinParameter.SequenceMessageAlignment(SequenceMessageAlignment.Right));
+                options.AddOptions(SequenceSkinParameter.SequenceMessageAlignment(SequenceMessageAlignment.Right));
             });
 
         const string expected = @"@startuml
@@ -204,7 +204,7 @@ Alice -> Bob : Response
             .AddSequence("Alice", "Bob", "ok")
             .Build(options =>
             {
-                options.AddOptions(SkinParameter.ResponseMessageBelowArrow(true));
+                options.AddOptions(SequenceSkinParameter.ResponseMessageBelowArrow(true));
             });
 
         const string expected = @"@startuml
@@ -537,8 +537,8 @@ Bob --> Alice : ok
             .AddSequence(alice1, @out, "out")
             .Build(config =>
             {
-                config.AddOptions(SkinParameter.ParticipantPadding(20),
-                    SkinParameter.BoxPadding(10));
+                config.AddOptions(SequenceSkinParameter.ParticipantPadding(20),
+                    SequenceSkinParameter.BoxPadding(10));
             });
 
         const string expected = @"@startuml
@@ -554,6 +554,91 @@ box ""Foo2""
 end box
 Alice1 -> Bob1 : hello
 Alice1 -> Out : out
+@enduml";
+
+        uml.Should().Be(expected);
+    }
+
+    [Fact]
+    public void Build_SkinParameter_HandWritten()
+    {
+        string uml = new SequenceDiagramBuilder()
+            .AddParticipant(ParticipantOptions.CreateActor("User"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("First Class", "A"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Second Class", "B"))
+            .AddParticipant(ParticipantOptions.CreateParticipant("Last Class", "C"))
+            .AddSequence("User", "A", "DoWork")
+            .Activate("A")
+            .AddSequence("A", "B", "Create Request")
+            .Activate("B")
+            .AddSequence("B", "C", "DoWork")
+            .Activate("C")
+            .AddSequence("C", "B", "WorkDone", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Destroy("C")
+            .AddSequence("B", "A", "Request Created", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Deactivate("B")
+            .AddSequence("A", "User", "Done", config =>
+            {
+                config.LineStyle = ArrowLineStyle.Dotted;
+            })
+            .Deactivate("A")
+            .Build(config =>
+            {
+                config.AddOptions(SkinParameter.BackgroundColor("#EEEBDC"),
+                    SkinParameter.HandWritten(),
+                    SkinParameter.ArrowColor("DeepSkyBlue"),
+                    SequenceSkinParameter.ActorBorderColor("DeepSkyBlue"),
+                    SequenceSkinParameter.LifeLineBorderColor("blue"),
+                    SequenceSkinParameter.LifeLineBackgroundColor("#A9DCDF"),
+                    SequenceSkinParameter.ParticipantBorderColor("DeepSkyBlue"),
+                    SequenceSkinParameter.ParticipantBackgroundColor("DodgerBlue"),
+                    SequenceSkinParameter.ParticipantFontName("Impact"),
+                    SequenceSkinParameter.ParticipantFontSize(17),
+                    SequenceSkinParameter.ParticipantFontColor("#A9DCDF"),
+                    SequenceSkinParameter.ActorBackgroundColor("aqua"),
+                    SequenceSkinParameter.ActorFontColor("DeepSkyBlue"),
+                    SequenceSkinParameter.ActorFontSize(17),
+                    SequenceSkinParameter.ActorFontName("Aapex"));
+            });
+
+        const string expected = @"@startuml
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+skinparam ArrowColor DeepSkyBlue
+skinparam ActorBorderColor DeepSkyBlue
+skinparam sequenceLifeLineBorderColor blue
+skinparam sequenceLifeLineBackgroundColor #A9DCDF
+skinparam sequenceParticipantBorderColor DeepSkyBlue
+skinparam sequenceParticipantBackgroundColor DodgerBlue
+skinparam sequenceParticipantFontName Impact
+skinparam sequenceParticipantFontSize 17
+skinparam sequenceParticipantFontColor #A9DCDF
+skinparam sequenceActorBackgroundColor aqua
+skinparam sequenceActorFontColor DeepSkyBlue
+skinparam sequenceActorFontSize 17
+skinparam sequenceActorFontName Aapex
+actor User
+participant ""First Class"" as A
+participant ""Second Class"" as B
+participant ""Last Class"" as C
+User -> A : DoWork
+activate A
+A -> B : Create Request
+activate B
+B -> C : DoWork
+activate C
+C --> B : WorkDone
+destroy C
+B --> A : Request Created
+deactivate B
+A --> User : Done
+deactivate A
 @enduml";
 
         uml.Should().Be(expected);

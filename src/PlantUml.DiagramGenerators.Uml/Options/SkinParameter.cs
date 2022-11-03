@@ -7,11 +7,11 @@
 /// For details look at https://plantuml.com/en/skinparam
 /// or look at https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
 /// </remarks>
-public partial class SkinParameter
+public class SkinParameter
 {
     private string Parameter { get; }
 
-    private SkinParameter(string parameter)
+    protected SkinParameter(string parameter)
     {
         Parameter = parameter;
     }

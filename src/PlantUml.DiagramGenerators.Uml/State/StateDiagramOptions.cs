@@ -12,5 +12,5 @@ public class StateDiagramOptions : DiagramOptions
         HideEmptyDescriptionTag = { IsActive = true }
     };
 
-    public DiagramOption HideEmptyDescriptionTag { get; } = DiagramOption.HideEmptyDescriptionTag;
+    public DiagramOption HideEmptyDescriptionTag { get; } = StateDiagramOption.HideEmptyDescriptionTag;
 }

@@ -217,4 +217,22 @@ public class SequenceUmlBuilder : UmlBuilder
         AddEntry(boxStatement, true);
         return this;
     }
+
+    public SequenceUmlBuilder Activate(string participant)
+    {
+        AddEntry($"activate {participant}");
+        return this;
+    }
+
+    public SequenceUmlBuilder Destroy(string participant)
+    {
+        AddEntry($"destroy {participant}");
+        return this;
+    }
+
+    public SequenceUmlBuilder Deactivate(string participant)
+    {
+        AddEntry($"deactivate {participant}");
+        return this;
+    }
 }

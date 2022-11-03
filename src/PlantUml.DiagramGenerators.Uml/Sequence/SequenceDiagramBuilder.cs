@@ -173,4 +173,22 @@ public class SequenceDiagramBuilder : UmlDiagramBuilderBase<SequenceUmlBuilder, 
         UmlBuilder.AddBox(title, umlBuilderAction);
         return this;
     }
+
+    public SequenceDiagramBuilder Activate(string participant)
+    {
+        UmlBuilder.Activate(participant);
+        return this;
+    }
+
+    public SequenceDiagramBuilder Destroy(string participant)
+    {
+        UmlBuilder.Destroy(participant);
+        return this;
+    }
+
+    public SequenceDiagramBuilder Deactivate(string participant)
+    {
+        UmlBuilder.Deactivate(participant);
+        return this;
+    }
 }

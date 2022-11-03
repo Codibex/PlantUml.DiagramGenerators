@@ -6,5 +6,5 @@ public class SequenceDiagramOptions : DiagramOptions
 {
     public static SequenceDiagramOptions Default => new();
 
-    public DiagramOption HideUnlinkedParticipant { get; } = DiagramOption.HideUnlinkedParticipant();
+    public DiagramOption HideUnlinkedParticipant { get; } = SequenceDiagramOption.HideUnlinkedParticipant();
 }
